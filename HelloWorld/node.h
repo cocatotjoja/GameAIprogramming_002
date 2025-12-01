@@ -10,7 +10,9 @@ private:
 	float valueLeft = NULL;
 	float valueTotal = NULL;
 	Node* parent = NULL;
-	int state = 0;
+	
+	// Unchecked = 1, Opened = 2, Closed = 3
+	int state = 1;
 	bool blocked = false;
 
 public:

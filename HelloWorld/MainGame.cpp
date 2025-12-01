@@ -12,12 +12,21 @@ Node nodes1[16][16];
 Node nodes2[16][16];
 Node nodes3[26][25];
 
-int currentMap = 1;
+Play::Vector2f start;
+Play::Vector2f goal;
+
+
+int currentMap = 2;
+int currentAlgorithm = 1;
 
 
 // The entry point for a PlayBuffer program
 void MainGameEntry( PLAY_IGNORE_COMMAND_LINE )
 {
+	// Set start and goal positions
+	
+
+	// Setup Maps
 	switch (currentMap)
 	{
 	case 1:
@@ -29,6 +38,7 @@ void MainGameEntry( PLAY_IGNORE_COMMAND_LINE )
 				nodes1[i][j] = Node(i, j);
 			}
 		}
+
 		// Setup Map 1
 		{
 			for (int i = 0; i < 16; i++)
@@ -69,6 +79,11 @@ void MainGameEntry( PLAY_IGNORE_COMMAND_LINE )
 			nodes1[11][13].SetBlocked(true);
 			nodes1[12][13].SetBlocked(true);
 		}
+
+		// Set start and goal positions
+		start = Play::Vector2D{ 1,14 } * 20;
+		goal = Play::Vector2D{ 14,1 } * 20;
+
 		break;
 	case 2:
 		// Setup array 2
@@ -79,6 +94,7 @@ void MainGameEntry( PLAY_IGNORE_COMMAND_LINE )
 				nodes2[i][j] = Node(i, j);
 			}
 		}
+
 		// Setup Map 2
 		{
 			for (int i = 0; i < 16; i++)
@@ -163,6 +179,11 @@ void MainGameEntry( PLAY_IGNORE_COMMAND_LINE )
 			nodes2[12][14].SetBlocked(true);
 
 		}
+
+		// Set start and goal positions
+		start = Play::Vector2D{ 1,14 } *20;
+		goal = Play::Vector2D{ 14,1 } *20;
+
 		break;
 	case 3:
 		// Setup array 3
@@ -173,6 +194,7 @@ void MainGameEntry( PLAY_IGNORE_COMMAND_LINE )
 				nodes3[i][j] = Node(i, j);
 			}
 		}
+
 		// Setup Map 3
 		{
 			for (int i = 0; i < 26; i++)
@@ -272,6 +294,11 @@ void MainGameEntry( PLAY_IGNORE_COMMAND_LINE )
 				nodes3[19][i].SetBlocked(true);
 			}
 		}
+
+		// Set start and goal positions
+		start = Play::Vector2D{ 1, 24 } *20;
+		goal = Play::Vector2D{ 25, 1 } *20;
+
 		break;
 	default:
 		break;
@@ -314,11 +341,19 @@ bool MainGameUpdate( float elapsedTime )
 			{
 				if (nodes1[i][j].GetBlocked())
 				{
-					Play::DrawRect(nodes1[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes1[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cRed, true);
+					Play::DrawRect(nodes1[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes1[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cBlack, true);
+				}
+				else if (nodes2[i][j].GetState() == 2)
+				{
+					Play::DrawRect(nodes2[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes2[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cBlue, true);
+				}
+				else if (nodes2[i][j].GetState() == 3)
+				{
+					Play::DrawRect(nodes2[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes2[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cMagenta, true);
 				}
 				else
 				{
-					Play::DrawRect(nodes1[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes1[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cCyan, true);
+					Play::DrawRect(nodes1[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes1[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cGrey, true);
 				}
 			}
 		}
@@ -331,11 +366,19 @@ bool MainGameUpdate( float elapsedTime )
 			{
 				if (nodes2[i][j].GetBlocked())
 				{
-					Play::DrawRect(nodes2[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes2[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cRed, true);
+					Play::DrawRect(nodes2[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes2[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cBlack, true);
+				}
+				else if (nodes2[i][j].GetState() == 2)
+				{
+					Play::DrawRect(nodes2[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes2[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cBlue, true);
+				}
+				else if (nodes2[i][j].GetState() == 3)
+				{
+					Play::DrawRect(nodes2[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes2[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cMagenta, true);
 				}
 				else
 				{
-					Play::DrawRect(nodes2[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes2[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cCyan, true);
+					Play::DrawRect(nodes2[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes2[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cGrey, true);
 				}
 			}
 		}
@@ -348,11 +391,19 @@ bool MainGameUpdate( float elapsedTime )
 			{
 				if (nodes3[i][j].GetBlocked())
 				{
-					Play::DrawRect(nodes3[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes3[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cRed, true);
+					Play::DrawRect(nodes3[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes3[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cBlack, true);
+				}
+				else if (nodes2[i][j].GetState() == 2)
+				{
+					Play::DrawRect(nodes2[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes2[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cBlue, true);
+				}
+				else if (nodes2[i][j].GetState() == 3)
+				{
+					Play::DrawRect(nodes2[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes2[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cMagenta, true);
 				}
 				else
 				{
-					Play::DrawRect(nodes3[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes3[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cCyan, true);
+					Play::DrawRect(nodes3[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes3[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cGrey, true);
 				}
 			}
 		}
@@ -361,6 +412,9 @@ bool MainGameUpdate( float elapsedTime )
 		break;
 	}
 
+	// Draw Start & Goal
+	Play::DrawRect(start + Play::Vector2f{ 1,1 }, start + Play::Vector2f{ 18,18 }, Play::cGreen, true);
+	Play::DrawRect(goal + Play::Vector2f{ 1,1 }, goal + Play::Vector2f{ 18,18 }, Play::cRed, true);
 
 	Play::PresentDrawingBuffer();
 	return Play::KeyDown( KEY_ESCAPE );
