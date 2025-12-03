@@ -11,7 +11,7 @@ private:
 	float valueTotal = NULL;
 	Play::Vector2f parent = ID;
 	
-	// Unchecked = 1, Opened = 2, Closed = 3
+	// Unchecked = 1, Opened = 2, Closed = 3, Path = 4
 	int state = 1;
 	bool blocked = false;
 
