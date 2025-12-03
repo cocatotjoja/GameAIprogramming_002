@@ -9,7 +9,7 @@ private:
 	float valueSofar = NULL;
 	float valueLeft = NULL;
 	float valueTotal = NULL;
-	Node* parent = NULL;
+	Play::Vector2f parent = ID;
 	
 	// Unchecked = 1, Opened = 2, Closed = 3
 	int state = 1;
@@ -20,11 +20,12 @@ public:
 	Node(int x, int y);
 
 	Play::Vector2f GetPosition();
+	bool IsBlocked();
 	int GetState();
 	void SetState(int newState);
-	bool GetBlocked();
 	void SetBlocked(bool block);
 	void SetValues(float parentValue, Play::Vector2f goal);
+	void SetParent(Play::Vector2f parentNode);
 	void ResetNode();
 	float GetValueSofar();
 	float GetValueLeft();

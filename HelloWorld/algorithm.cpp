@@ -1,6 +1,76 @@
 #include "algorithm.h"
 
 
+bool Algorithm::IsWithinMap(int x, int y, int width, int height)
+{
+	if (x - 1 < width && x - 1 >= 0 && y - 1 < height && y - 1 >= 0)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+//Return 0, if shouldn'd add, returns 1 if unchecked, returns 2 if opened, returns 3 if closed
+int Algorithm::ShouldAdd(Node** map1, int x, int y, int corner, int width, int height)
+{
+	//Chacke if within map
+	if (x < width - 1 && x > 0 && y < height -1 && y >= 0)
+	{
+		//Check diagonal
+		switch (corner)
+		{
+		case 1:
+			if (map1[x+1][y].IsBlocked() || map1[x][y-1].IsBlocked())
+			{
+				return 0;
+			}
+			break;
+		case 2:
+			if (map1[x - 1][y].IsBlocked() || map1[x][y - 1].IsBlocked())
+			{
+				return 0;
+			}
+			break;
+		case 3:
+			if (map1[x + 1][y].IsBlocked() || map1[x][y + 1].IsBlocked())
+			{
+				return 0;
+			}
+			break;
+		case 4:
+			if (map1[x - 1][y].IsBlocked() || map1[x][y + 1].IsBlocked())
+			{
+				return 0;
+			}
+			break;
+		default:
+			break;
+		}
+		// Check state, Unchecked = 1, Opened = 2, Closed = 3
+		switch (map1[x][y].GetState())
+		{
+		case 1:
+			return 1;
+			break;
+		case 2:
+			return 2;
+			break;
+		case 3:
+			return 3;
+			break;
+		default:
+			break;
+		}
+	}
+	else
+	{
+		return 0;
+	}
+}
+
 void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f goal)
 {
 	//Check if opened is empty, if so add the start node
@@ -25,10 +95,109 @@ void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f goal)
 	float parentValue = opened[smallestID]->GetValueSofar();
 
 	// For all adjacent nodes
-	map1[(int)parentID.x + 1][(int)parentID.y];
-	map1[(int)parentID.x - 1][(int)parentID.y];
-	map1[(int)parentID.x][(int)parentID.y + 1];
-	map1[(int)parentID.x][(int)parentID.y - 1];
+	//map1[(int)parentID.x + 1][(int)parentID.y];
+	//map1[(int)parentID.x - 1][(int)parentID.y];
+	//map1[(int)parentID.x][(int)parentID.y + 1];
+	//map1[(int)parentID.x][(int)parentID.y - 1];
+
+	switch (ShouldAdd(map1, (int)parentID.x + 1, (int)parentID.y, 0, width, height))
+	{
+	case 1:
+		opened.push_back(&(map1[(int)parentID.x + 1][(int)parentID.y]));
+		break;
+	case 2:
+		// Compare and update value and parent if needed
+		if (map1[(int)parentID.x + 1][(int)parentID.y].GetValueSofar() < parentValue)
+		{
+			map1[(int)parentID.x + 1][(int)parentID.y].SetValues(parentValue, goal);
+			map1[(int)parentID.x + 1][(int)parentID.y].SetParent(parentID);
+		}
+		break;
+	case 3:
+		// If new value is smaller than existing
+		if (map1[(int)parentID.x + 1][(int)parentID.y].GetValueSofar() < parentValue)
+		{
+			// Update Value and Parent
+			map1[(int)parentID.x + 1][(int)parentID.y].SetValues(parentValue, goal);
+			map1[(int)parentID.x + 1][(int)parentID.y].SetParent(parentID);
+
+			// Add to open list
+			opened.push_back(&(map1[(int)parentID.x + 1][(int)parentID.y]));
+			
+			// Remove from closed list
+			for (int i = 0; i < closed.size(); i++)
+			{
+				if (map1[(int)parentID.x + 1][(int)parentID.y].GetPosition() == closed[i]->GetPosition())
+				{
+					closed.at(i) = closed.back();
+					closed.pop_back();
+				}
+			}
+		}
+		break;
+	default:
+		break;
+	}
+
+	switch (ShouldAdd(map1, (int)parentID.x - 1, (int)parentID.y, 0, width, height))
+	{
+	case 1:
+		opened.push_back(&(map1[(int)parentID.x - 1][(int)parentID.y]));
+		break;
+	case 2:
+		// Compare and update value and parent if needed
+		if (map1[(int)parentID.x - 1][(int)parentID.y].GetValueSofar() < parentValue)
+		{
+			map1[(int)parentID.x - 1][(int)parentID.y].SetValues(parentValue, goal);
+			map1[(int)parentID.x - 1][(int)parentID.y].SetParent(parentID);
+		}
+		break;
+	case 3:
+		// If new value is smaller than existing
+		if (map1[(int)parentID.x - 1][(int)parentID.y].GetValueSofar() < parentValue)
+		{
+			// Update Value and Parent
+			map1[(int)parentID.x - 1][(int)parentID.y].SetValues(parentValue, goal);
+			map1[(int)parentID.x - 1][(int)parentID.y].SetParent(parentID);
+
+			// Add to open list
+			opened.push_back(&(map1[(int)parentID.x - 1][(int)parentID.y]));
+
+			// Remove from closed list
+			for (int i = 0; i < closed.size(); i++)
+			{
+				if (map1[(int)parentID.x - 1][(int)parentID.y].GetPosition() == closed[i]->GetPosition())
+				{
+					closed.at(i) = closed.back();
+					closed.pop_back();
+				}
+			}
+		}
+		break;
+	default:
+		break;
+	}
+
+
+
+	/*
+	if (!map1[(int)parentID.x + 1][(int)parentID.y].IsBlocked() && IsWithinMap((int)parentID.x + 1, (int)parentID.y, width, height))
+	{
+		opened.push_back(&(map1[(int)parentID.x + 1][(int)parentID.y]));
+	}
+	if (!map1[(int)parentID.x - 1][(int)parentID.y].IsBlocked() && IsWithinMap((int)parentID.x + 1, (int)parentID.y, width, height))
+	{
+		opened.push_back(&(map1[(int)parentID.x - 1][(int)parentID.y]));
+	}
+	if (!map1[(int)parentID.x][(int)parentID.y + 1].IsBlocked() && IsWithinMap((int)parentID.x, (int)parentID.y + 1, width, height))
+	{
+		opened.push_back(&(map1[(int)parentID.x][(int)parentID.y + 1]));
+	}
+	if (!map1[(int)parentID.x][(int)parentID.y -1].IsBlocked() && IsWithinMap((int)parentID.x, (int)parentID.y - 1, width, height))
+	{
+		opened.push_back(&(map1[(int)parentID.x][(int)parentID.y - 1]));
+	}
+	*/
 
 	// Diagonally blocked???
 	map1[(int)parentID.x + 1][(int)parentID.y + 1];

@@ -339,7 +339,7 @@ bool MainGameUpdate( float elapsedTime )
 		{
 			for (int j = 0; j < 16; j++)
 			{
-				if (nodes1[i][j].GetBlocked())
+				if (nodes1[i][j].IsBlocked())
 				{
 					Play::DrawRect(nodes1[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes1[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cBlack, true);
 				}
@@ -364,7 +364,7 @@ bool MainGameUpdate( float elapsedTime )
 		{
 			for (int j = 0; j < 16; j++)
 			{
-				if (nodes2[i][j].GetBlocked())
+				if (nodes2[i][j].IsBlocked())
 				{
 					Play::DrawRect(nodes2[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes2[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cBlack, true);
 				}
@@ -389,7 +389,7 @@ bool MainGameUpdate( float elapsedTime )
 		{
 			for (int j = 0; j < 25; j++)
 			{
-				if (nodes3[i][j].GetBlocked())
+				if (nodes3[i][j].IsBlocked())
 				{
 					Play::DrawRect(nodes3[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes3[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cBlack, true);
 				}

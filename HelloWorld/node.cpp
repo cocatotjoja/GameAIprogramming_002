@@ -17,6 +17,11 @@ Play::Vector2f Node::GetPosition()
 	return position;
 }
 
+bool Node::IsBlocked()
+{
+	return blocked;
+}
+
 int Node::GetState()
 {
 	return state;
@@ -25,11 +30,6 @@ int Node::GetState()
 void Node::SetState(int newState)
 {
 	state = newState;
-}
-
-bool Node::GetBlocked()
-{
-	return blocked;
 }
 
 void Node::SetBlocked(bool block)
@@ -42,6 +42,11 @@ void Node::SetValues(float parentValue, Play::Vector2f goal)
 	valueSofar = parentValue + 1;
 	valueLeft = abs(position.x - goal.x) + abs(position.y - goal.y);
 	valueTotal = valueSofar + valueLeft;
+}
+
+void Node::SetParent(Play::Vector2f parentNode)
+{
+	parent = parentNode;
 }
 
 void Node::ResetNode()
