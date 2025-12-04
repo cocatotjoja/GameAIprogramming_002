@@ -19,7 +19,7 @@ int Algorithm::ShouldAdd(Node** map1, int x, int y, int corner, int width, int h
 	//Chacke if within map
 	if (x < width - 1 && x > 0 && y < height -1 && y > 0)
 	{
-		Play::DrawDebugText({ 300, 550 }, "In map", Play::cBlack);
+		//Play::DrawDebugText({ 300, 550 }, "In map", Play::cBlack);
 		//Check diagonal
 		switch (corner)
 		{
@@ -51,19 +51,22 @@ int Algorithm::ShouldAdd(Node** map1, int x, int y, int corner, int width, int h
 			break;
 		}
 
+		std::string stateStr;
+		stateStr = std::to_string(map1[x][y].GetState());
+		Play::DrawDebugText({ 320, 500 }, stateStr.c_str(), Play::cBlack);
+		
 		// Check state, Unchecked = 1, Opened = 2, Closed = 3
 		switch (map1[x][y].GetState())
 		{
 		case 1:
-			Play::DrawDebugText({ 300, 500 }, "Add", Play::cBlack);
+			//Play::DrawDebugText({ 300, 500 }, "Add", Play::cBlack);
 			return 1;
 			break;
 		case 2:
-			//Play::DrawDebugText({ 300, 500 }, "Update", Play::cBlack);
 			return 2;
 			break;
 		case 3:
-			Play::DrawDebugText({ 300, 500 }, "Add", Play::cBlack);
+			//Play::DrawDebugText({ 300, 500 }, "Add", Play::cBlack);
 			return 3;
 			break;
 		default:
@@ -72,7 +75,6 @@ int Algorithm::ShouldAdd(Node** map1, int x, int y, int corner, int width, int h
 	}
 	else
 	{
-		//Play::DrawDebugText({ 300, 500 }, "dont Add", Play::cBlack);
 		return 0;
 	}
 }
@@ -81,7 +83,6 @@ void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f start, 
 {
 	if (found)
 	{
-		Play::DrawDebugText({ 300, 500 }, "found", Play::cBlack);
 		return;
 	}
 	//Check if opened is empty, if so add the start node
@@ -89,7 +90,7 @@ void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f start, 
 	{
 		int x = start.x / 20;
 		int y = start.y / 20;
-		opened.push_back(&(map1[1][height-1]));
+		opened.push_back(&(map1[1][height-2]));
 		map1[x][y].SetValues(0, goal);
 		map1[x][y].SetState(2);
 
@@ -106,8 +107,7 @@ void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f start, 
 		}
 	}
 
-	std::string idStr = std::to_string(smallestValue);
-	//Play::DrawDebugText({ 300, 500 }, idStr.c_str(), Play::cBlack);
+
 
 	if (opened[smallestID]->GetPosition() == goal)
 	{
@@ -121,15 +121,10 @@ void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f start, 
 	}
 	else
 	{
-		//Play::DrawDebugText({ 300, 500 }, "not at goal", Play::cBlack);
-		Play::Vector2f parentID = opened[smallestID]->GetPosition() / 20;
+		Play::Vector2f parentID = opened[smallestID]->GetID();
 		float parentValue = opened[smallestID]->GetValueSofar();
 
-
-		std::string xStr = std::to_string((int)parentID.x + 1);
-		Play::DrawDebugText({ 300, 500 }, xStr.c_str(), Play::cBlack);
-		std::string yStr = std::to_string((int)parentID.y);
-		Play::DrawDebugText({ 320, 500 }, yStr.c_str(), Play::cBlack);
+		
 
 		// Adjacent nodes
 
@@ -520,6 +515,7 @@ void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f start, 
 		default:
 			break;
 		}
+		
 
 		// Add currently looked at node to closed list and update its state
 		//opened[smallestID]->SetState(3);

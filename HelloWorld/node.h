@@ -20,6 +20,7 @@ public:
 	Node(int x, int y);
 
 	Play::Vector2f GetPosition();
+	Play::Vector2f GetID();
 	bool IsBlocked();
 	int GetState();
 	void SetState(int newState);

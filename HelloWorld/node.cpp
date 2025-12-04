@@ -17,6 +17,11 @@ Play::Vector2f Node::GetPosition()
 	return position;
 }
 
+Play::Vector2f Node::GetID()
+{
+	return ID;
+}
+
 bool Node::IsBlocked()
 {
 	return blocked;
