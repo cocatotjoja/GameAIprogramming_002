@@ -73,6 +73,10 @@ int Algorithm::ShouldAdd(Node** map1, int x, int y, int corner, int width, int h
 
 void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f goal)
 {
+	if (found)
+	{
+		return;
+	}
 	//Check if opened is empty, if so add the start node
 	if (opened.empty())
 	{
@@ -91,333 +95,387 @@ void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f goal)
 		}
 	}
 
-	Play::Vector2f parentID = opened[smallestID]->GetPosition() / 20;
-	float parentValue = opened[smallestID]->GetValueSofar();
-
-	// Adjacent nodes
-
-	//map1[(int)parentID.x + 1][(int)parentID.y];
-	switch (ShouldAdd(map1, (int)parentID.x + 1, (int)parentID.y, 0, width, height))
+	if (opened[smallestID]->GetPosition() == goal)
 	{
-	case 1:
-		opened.push_back(&(map1[(int)parentID.x + 1][(int)parentID.y]));
-		break;
-	case 2:
-		// Compare and update value and parent if needed
-		if (map1[(int)parentID.x + 1][(int)parentID.y].GetValueSofar() < parentValue + 1)
+		Play::Vector2f currentID = opened[smallestID]->GetPosition() / 20;
+		while (currentID != map1[(int)currentID.x][(int)currentID.y].GetParent())
 		{
-			map1[(int)parentID.x + 1][(int)parentID.y].SetValues(parentValue, goal);
-			map1[(int)parentID.x + 1][(int)parentID.y].SetParent(parentID);
+			map1[(int)currentID.x][(int)currentID.y].SetState(4);
+			currentID = map1[(int)currentID.x][(int)currentID.y].GetParent();
 		}
-		break;
-	case 3:
-		// If new value is smaller than existing
-		if (map1[(int)parentID.x + 1][(int)parentID.y].GetValueSofar() < parentValue + 1)
+		found = true;
+	}
+	else
+	{
+		Play::Vector2f parentID = opened[smallestID]->GetPosition() / 20;
+		float parentValue = opened[smallestID]->GetValueSofar();
+
+		// Adjacent nodes
+
+		//map1[(int)parentID.x + 1][(int)parentID.y];
+		switch (ShouldAdd(map1, (int)parentID.x + 1, (int)parentID.y, 0, width, height))
 		{
+		case 1:
 			// Update Value and Parent
 			map1[(int)parentID.x + 1][(int)parentID.y].SetValues(parentValue, goal);
 			map1[(int)parentID.x + 1][(int)parentID.y].SetParent(parentID);
 
 			// Add to open list
 			opened.push_back(&(map1[(int)parentID.x + 1][(int)parentID.y]));
-			
-			// Remove from closed list
-			for (int i = 0; i < closed.size(); i++)
+			break;
+		case 2:
+			// Compare and update value and parent if needed
+			if (map1[(int)parentID.x + 1][(int)parentID.y].GetValueSofar() < parentValue + 1)
 			{
-				if (map1[(int)parentID.x + 1][(int)parentID.y].GetPosition() == closed[i]->GetPosition())
+				map1[(int)parentID.x + 1][(int)parentID.y].SetValues(parentValue, goal);
+				map1[(int)parentID.x + 1][(int)parentID.y].SetParent(parentID);
+			}
+			break;
+		case 3:
+			// If new value is smaller than existing
+			if (map1[(int)parentID.x + 1][(int)parentID.y].GetValueSofar() < parentValue + 1)
+			{
+				// Update Value and Parent
+				map1[(int)parentID.x + 1][(int)parentID.y].SetValues(parentValue, goal);
+				map1[(int)parentID.x + 1][(int)parentID.y].SetParent(parentID);
+
+				// Add to open list
+				opened.push_back(&(map1[(int)parentID.x + 1][(int)parentID.y]));
+			
+				// Remove from closed list
+				for (int i = 0; i < closed.size(); i++)
 				{
-					closed.at(i) = closed.back();
-					closed.pop_back();
+					if (map1[(int)parentID.x + 1][(int)parentID.y].GetPosition() == closed[i]->GetPosition())
+					{
+						closed.at(i) = closed.back();
+						closed.pop_back();
+					}
 				}
 			}
+			break;
+		default:
+			break;
 		}
-		break;
-	default:
-		break;
-	}
 
-	//map1[(int)parentID.x - 1][(int)parentID.y];
-	switch (ShouldAdd(map1, (int)parentID.x - 1, (int)parentID.y, 0, width, height))
-	{
-	case 1:
-		opened.push_back(&(map1[(int)parentID.x - 1][(int)parentID.y]));
-		break;
-	case 2:
-		// Compare and update value and parent if needed
-		if (map1[(int)parentID.x - 1][(int)parentID.y].GetValueSofar() < parentValue + 1)
+		//map1[(int)parentID.x - 1][(int)parentID.y];
+		switch (ShouldAdd(map1, (int)parentID.x - 1, (int)parentID.y, 0, width, height))
 		{
-			map1[(int)parentID.x - 1][(int)parentID.y].SetValues(parentValue, goal);
-			map1[(int)parentID.x - 1][(int)parentID.y].SetParent(parentID);
-		}
-		break;
-	case 3:
-		// If new value is smaller than existing
-		if (map1[(int)parentID.x - 1][(int)parentID.y].GetValueSofar() < parentValue + 1)
-		{
+		case 1:
 			// Update Value and Parent
-			map1[(int)parentID.x - 1][(int)parentID.y].SetValues(parentValue, goal);
-			map1[(int)parentID.x - 1][(int)parentID.y].SetParent(parentID);
+			map1[(int)parentID.x + 1][(int)parentID.y].SetValues(parentValue, goal);
+			map1[(int)parentID.x + 1][(int)parentID.y].SetParent(parentID);
 
 			// Add to open list
 			opened.push_back(&(map1[(int)parentID.x - 1][(int)parentID.y]));
-
-			// Remove from closed list
-			for (int i = 0; i < closed.size(); i++)
+			break;
+		case 2:
+			// Compare and update value and parent if needed
+			if (map1[(int)parentID.x - 1][(int)parentID.y].GetValueSofar() < parentValue + 1)
 			{
-				if (map1[(int)parentID.x - 1][(int)parentID.y].GetPosition() == closed[i]->GetPosition())
+				map1[(int)parentID.x - 1][(int)parentID.y].SetValues(parentValue, goal);
+				map1[(int)parentID.x - 1][(int)parentID.y].SetParent(parentID);
+			}
+			break;
+		case 3:
+			// If new value is smaller than existing
+			if (map1[(int)parentID.x - 1][(int)parentID.y].GetValueSofar() < parentValue + 1)
+			{
+				// Update Value and Parent
+				map1[(int)parentID.x - 1][(int)parentID.y].SetValues(parentValue, goal);
+				map1[(int)parentID.x - 1][(int)parentID.y].SetParent(parentID);
+
+				// Add to open list
+				opened.push_back(&(map1[(int)parentID.x - 1][(int)parentID.y]));
+
+				// Remove from closed list
+				for (int i = 0; i < closed.size(); i++)
 				{
-					closed.at(i) = closed.back();
-					closed.pop_back();
+					if (map1[(int)parentID.x - 1][(int)parentID.y].GetPosition() == closed[i]->GetPosition())
+					{
+						closed.at(i) = closed.back();
+						closed.pop_back();
+					}
 				}
 			}
+			break;
+		default:
+			break;
 		}
-		break;
-	default:
-		break;
-	}
 
-	//map1[(int)parentID.x][(int)parentID.y + 1];
-	switch (ShouldAdd(map1, (int)parentID.x, (int)parentID.y + 1, 0, width, height))
-	{
-	case 1:
-		opened.push_back(&(map1[(int)parentID.x][(int)parentID.y + 1]));
-		break;
-	case 2:
-		// Compare and update value and parent if needed
-		if (map1[(int)parentID.x][(int)parentID.y + 1].GetValueSofar() < parentValue + 1)
+		//map1[(int)parentID.x][(int)parentID.y + 1];
+		switch (ShouldAdd(map1, (int)parentID.x, (int)parentID.y + 1, 0, width, height))
 		{
-			map1[(int)parentID.x][(int)parentID.y + 1].SetValues(parentValue, goal);
-			map1[(int)parentID.x][(int)parentID.y + 1].SetParent(parentID);
-		}
-		break;
-	case 3:
-		// If new value is smaller than existing
-		if (map1[(int)parentID.x][(int)parentID.y + 1].GetValueSofar() < parentValue + 1)
-		{
+		case 1:
 			// Update Value and Parent
-			map1[(int)parentID.x][(int)parentID.y + 1].SetValues(parentValue, goal);
-			map1[(int)parentID.x][(int)parentID.y + 1].SetParent(parentID);
+			map1[(int)parentID.x + 1][(int)parentID.y].SetValues(parentValue, goal);
+			map1[(int)parentID.x + 1][(int)parentID.y].SetParent(parentID);
 
 			// Add to open list
 			opened.push_back(&(map1[(int)parentID.x][(int)parentID.y + 1]));
-
-			// Remove from closed list
-			for (int i = 0; i < closed.size(); i++)
+			break;
+		case 2:
+			// Compare and update value and parent if needed
+			if (map1[(int)parentID.x][(int)parentID.y + 1].GetValueSofar() < parentValue + 1)
 			{
-				if (map1[(int)parentID.x][(int)parentID.y + 1].GetPosition() == closed[i]->GetPosition())
+				map1[(int)parentID.x][(int)parentID.y + 1].SetValues(parentValue, goal);
+				map1[(int)parentID.x][(int)parentID.y + 1].SetParent(parentID);
+			}
+			break;
+		case 3:
+			// If new value is smaller than existing
+			if (map1[(int)parentID.x][(int)parentID.y + 1].GetValueSofar() < parentValue + 1)
+			{
+				// Update Value and Parent
+				map1[(int)parentID.x][(int)parentID.y + 1].SetValues(parentValue, goal);
+				map1[(int)parentID.x][(int)parentID.y + 1].SetParent(parentID);
+
+				// Add to open list
+				opened.push_back(&(map1[(int)parentID.x][(int)parentID.y + 1]));
+
+				// Remove from closed list
+				for (int i = 0; i < closed.size(); i++)
 				{
-					closed.at(i) = closed.back();
-					closed.pop_back();
+					if (map1[(int)parentID.x][(int)parentID.y + 1].GetPosition() == closed[i]->GetPosition())
+					{
+						closed.at(i) = closed.back();
+						closed.pop_back();
+					}
 				}
 			}
+			break;
+		default:
+			break;
 		}
-		break;
-	default:
-		break;
-	}
 
-	//map1[(int)parentID.x][(int)parentID.y - 1];
-	switch (ShouldAdd(map1, (int)parentID.x, (int)parentID.y - 1, 0, width, height))
-	{
-	case 1:
-		opened.push_back(&(map1[(int)parentID.x][(int)parentID.y - 1]));
-		break;
-	case 2:
-		// Compare and update value and parent if needed
-		if (map1[(int)parentID.x][(int)parentID.y - 1].GetValueSofar() < parentValue + 1)
+		//map1[(int)parentID.x][(int)parentID.y - 1];
+		switch (ShouldAdd(map1, (int)parentID.x, (int)parentID.y - 1, 0, width, height))
 		{
-			map1[(int)parentID.x][(int)parentID.y - 1].SetValues(parentValue, goal);
-			map1[(int)parentID.x][(int)parentID.y - 1].SetParent(parentID);
-		}
-		break;
-	case 3:
-		// If new value is smaller than existing
-		if (map1[(int)parentID.x][(int)parentID.y - 1].GetValueSofar() < parentValue + 1)
-		{
+		case 1:
 			// Update Value and Parent
-			map1[(int)parentID.x][(int)parentID.y - 1].SetValues(parentValue, goal);
-			map1[(int)parentID.x][(int)parentID.y - 1].SetParent(parentID);
+			map1[(int)parentID.x + 1][(int)parentID.y].SetValues(parentValue, goal);
+			map1[(int)parentID.x + 1][(int)parentID.y].SetParent(parentID);
 
 			// Add to open list
 			opened.push_back(&(map1[(int)parentID.x][(int)parentID.y - 1]));
-
-			// Remove from closed list
-			for (int i = 0; i < closed.size(); i++)
+			break;
+		case 2:
+			// Compare and update value and parent if needed
+			if (map1[(int)parentID.x][(int)parentID.y - 1].GetValueSofar() < parentValue + 1)
 			{
-				if (map1[(int)parentID.x][(int)parentID.y - 1].GetPosition() == closed[i]->GetPosition())
+				map1[(int)parentID.x][(int)parentID.y - 1].SetValues(parentValue, goal);
+				map1[(int)parentID.x][(int)parentID.y - 1].SetParent(parentID);
+			}
+			break;
+		case 3:
+			// If new value is smaller than existing
+			if (map1[(int)parentID.x][(int)parentID.y - 1].GetValueSofar() < parentValue + 1)
+			{
+				// Update Value and Parent
+				map1[(int)parentID.x][(int)parentID.y - 1].SetValues(parentValue, goal);
+				map1[(int)parentID.x][(int)parentID.y - 1].SetParent(parentID);
+
+				// Add to open list
+				opened.push_back(&(map1[(int)parentID.x][(int)parentID.y - 1]));
+
+				// Remove from closed list
+				for (int i = 0; i < closed.size(); i++)
 				{
-					closed.at(i) = closed.back();
-					closed.pop_back();
+					if (map1[(int)parentID.x][(int)parentID.y - 1].GetPosition() == closed[i]->GetPosition())
+					{
+						closed.at(i) = closed.back();
+						closed.pop_back();
+					}
 				}
 			}
+			break;
+		default:
+			break;
 		}
-		break;
-	default:
-		break;
-	}
 
 
 
-	// Diagonal Nodes
-	//map1[(int)parentID.x + 1][(int)parentID.y + 1];
-	switch (ShouldAdd(map1, (int)parentID.x + 1, (int)parentID.y + 1, 0, width, height))
-	{
-	case 1:
-		opened.push_back(&(map1[(int)parentID.x + 1][(int)parentID.y + 1]));
-		break;
-	case 2:
-		// Compare and update value and parent if needed
-		if (map1[(int)parentID.x + 1][(int)parentID.y + 1].GetValueSofar() < parentValue + 1)
+		// Diagonal Nodes
+		//map1[(int)parentID.x + 1][(int)parentID.y + 1];
+		switch (ShouldAdd(map1, (int)parentID.x + 1, (int)parentID.y + 1, 2, width, height))
 		{
-			map1[(int)parentID.x + 1][(int)parentID.y + 1].SetValues(parentValue, goal);
-			map1[(int)parentID.x + 1][(int)parentID.y + 1].SetParent(parentID);
-		}
-		break;
-	case 3:
-		// If new value is smaller than existing
-		if (map1[(int)parentID.x + 1][(int)parentID.y + 1].GetValueSofar() < parentValue + 1)
-		{
+		case 1:
 			// Update Value and Parent
-			map1[(int)parentID.x + 1][(int)parentID.y + 1].SetValues(parentValue, goal);
-			map1[(int)parentID.x + 1][(int)parentID.y + 1].SetParent(parentID);
+			map1[(int)parentID.x + 1][(int)parentID.y].SetValues(parentValue, goal);
+			map1[(int)parentID.x + 1][(int)parentID.y].SetParent(parentID);
 
 			// Add to open list
 			opened.push_back(&(map1[(int)parentID.x + 1][(int)parentID.y + 1]));
-
-			// Remove from closed list
-			for (int i = 0; i < closed.size(); i++)
+			break;
+		case 2:
+			// Compare and update value and parent if needed
+			if (map1[(int)parentID.x + 1][(int)parentID.y + 1].GetValueSofar() < parentValue + 1)
 			{
-				if (map1[(int)parentID.x + 1][(int)parentID.y + 1].GetPosition() == closed[i]->GetPosition())
+				map1[(int)parentID.x + 1][(int)parentID.y + 1].SetValues(parentValue, goal);
+				map1[(int)parentID.x + 1][(int)parentID.y + 1].SetParent(parentID);
+			}
+			break;
+		case 3:
+			// If new value is smaller than existing
+			if (map1[(int)parentID.x + 1][(int)parentID.y + 1].GetValueSofar() < parentValue + 1)
+			{
+				// Update Value and Parent
+				map1[(int)parentID.x + 1][(int)parentID.y + 1].SetValues(parentValue, goal);
+				map1[(int)parentID.x + 1][(int)parentID.y + 1].SetParent(parentID);
+
+				// Add to open list
+				opened.push_back(&(map1[(int)parentID.x + 1][(int)parentID.y + 1]));
+
+				// Remove from closed list
+				for (int i = 0; i < closed.size(); i++)
 				{
-					closed.at(i) = closed.back();
-					closed.pop_back();
+					if (map1[(int)parentID.x + 1][(int)parentID.y + 1].GetPosition() == closed[i]->GetPosition())
+					{
+						closed.at(i) = closed.back();
+						closed.pop_back();
+					}
 				}
 			}
+			break;
+		default:
+			break;
 		}
-		break;
-	default:
-		break;
-	}
 
-	//map1[(int)parentID.x - 1][(int)parentID.y - 1];
-	switch (ShouldAdd(map1, (int)parentID.x - 1, (int)parentID.y - 1, 0, width, height))
-	{
-	case 1:
-		opened.push_back(&(map1[(int)parentID.x - 1][(int)parentID.y - 1]));
-		break;
-	case 2:
-		// Compare and update value and parent if needed
-		if (map1[(int)parentID.x - 1][(int)parentID.y - 1].GetValueSofar() < parentValue + 1)
+		//map1[(int)parentID.x - 1][(int)parentID.y - 1];
+		switch (ShouldAdd(map1, (int)parentID.x - 1, (int)parentID.y - 1, 3, width, height))
 		{
-			map1[(int)parentID.x - 1][(int)parentID.y - 1].SetValues(parentValue, goal);
-			map1[(int)parentID.x - 1][(int)parentID.y - 1].SetParent(parentID);
-		}
-		break;
-	case 3:
-		// If new value is smaller than existing
-		if (map1[(int)parentID.x - 1][(int)parentID.y - 1].GetValueSofar() < parentValue + 1)
-		{
+		case 1:
 			// Update Value and Parent
-			map1[(int)parentID.x - 1][(int)parentID.y - 1].SetValues(parentValue, goal);
-			map1[(int)parentID.x - 1][(int)parentID.y - 1].SetParent(parentID);
+			map1[(int)parentID.x + 1][(int)parentID.y].SetValues(parentValue, goal);
+			map1[(int)parentID.x + 1][(int)parentID.y].SetParent(parentID);
 
 			// Add to open list
 			opened.push_back(&(map1[(int)parentID.x - 1][(int)parentID.y - 1]));
-
-			// Remove from closed list
-			for (int i = 0; i < closed.size(); i++)
+			break;
+		case 2:
+			// Compare and update value and parent if needed
+			if (map1[(int)parentID.x - 1][(int)parentID.y - 1].GetValueSofar() < parentValue + 1)
 			{
-				if (map1[(int)parentID.x - 1][(int)parentID.y - 1].GetPosition() == closed[i]->GetPosition())
+				map1[(int)parentID.x - 1][(int)parentID.y - 1].SetValues(parentValue, goal);
+				map1[(int)parentID.x - 1][(int)parentID.y - 1].SetParent(parentID);
+			}
+			break;
+		case 3:
+			// If new value is smaller than existing
+			if (map1[(int)parentID.x - 1][(int)parentID.y - 1].GetValueSofar() < parentValue + 1)
+			{
+				// Update Value and Parent
+				map1[(int)parentID.x - 1][(int)parentID.y - 1].SetValues(parentValue, goal);
+				map1[(int)parentID.x - 1][(int)parentID.y - 1].SetParent(parentID);
+
+				// Add to open list
+				opened.push_back(&(map1[(int)parentID.x - 1][(int)parentID.y - 1]));
+
+				// Remove from closed list
+				for (int i = 0; i < closed.size(); i++)
 				{
-					closed.at(i) = closed.back();
-					closed.pop_back();
+					if (map1[(int)parentID.x - 1][(int)parentID.y - 1].GetPosition() == closed[i]->GetPosition())
+					{
+						closed.at(i) = closed.back();
+						closed.pop_back();
+					}
 				}
 			}
+			break;
+		default:
+			break;
 		}
-		break;
-	default:
-		break;
-	}
 	
-	//map1[(int)parentID.x - 1][(int)parentID.y + 1];
-	switch (ShouldAdd(map1, (int)parentID.x - 1, (int)parentID.y + 1, 0, width, height))
-	{
-	case 1:
-		opened.push_back(&(map1[(int)parentID.x - 1][(int)parentID.y + 1]));
-		break;
-	case 2:
-		// Compare and update value and parent if needed
-		if (map1[(int)parentID.x - 1][(int)parentID.y + 1].GetValueSofar() < parentValue + 1)
+		//map1[(int)parentID.x - 1][(int)parentID.y + 1];
+		switch (ShouldAdd(map1, (int)parentID.x - 1, (int)parentID.y + 1, 1, width, height))
 		{
-			map1[(int)parentID.x - 1][(int)parentID.y + 1].SetValues(parentValue, goal);
-			map1[(int)parentID.x - 1][(int)parentID.y + 1].SetParent(parentID);
-		}
-		break;
-	case 3:
-		// If new value is smaller than existing
-		if (map1[(int)parentID.x - 1][(int)parentID.y + 1].GetValueSofar() < parentValue + 1)
-		{
+		case 1:
 			// Update Value and Parent
-			map1[(int)parentID.x - 1][(int)parentID.y + 1].SetValues(parentValue, goal);
-			map1[(int)parentID.x - 1][(int)parentID.y + 1].SetParent(parentID);
+			map1[(int)parentID.x + 1][(int)parentID.y].SetValues(parentValue, goal);
+			map1[(int)parentID.x + 1][(int)parentID.y].SetParent(parentID);
 
 			// Add to open list
 			opened.push_back(&(map1[(int)parentID.x - 1][(int)parentID.y + 1]));
-
-			// Remove from closed list
-			for (int i = 0; i < closed.size(); i++)
+			break;
+		case 2:
+			// Compare and update value and parent if needed
+			if (map1[(int)parentID.x - 1][(int)parentID.y + 1].GetValueSofar() < parentValue + 1)
 			{
-				if (map1[(int)parentID.x - 1][(int)parentID.y + 1].GetPosition() == closed[i]->GetPosition())
+				map1[(int)parentID.x - 1][(int)parentID.y + 1].SetValues(parentValue, goal);
+				map1[(int)parentID.x - 1][(int)parentID.y + 1].SetParent(parentID);
+			}
+			break;
+		case 3:
+			// If new value is smaller than existing
+			if (map1[(int)parentID.x - 1][(int)parentID.y + 1].GetValueSofar() < parentValue + 1)
+			{
+				// Update Value and Parent
+				map1[(int)parentID.x - 1][(int)parentID.y + 1].SetValues(parentValue, goal);
+				map1[(int)parentID.x - 1][(int)parentID.y + 1].SetParent(parentID);
+
+				// Add to open list
+				opened.push_back(&(map1[(int)parentID.x - 1][(int)parentID.y + 1]));
+
+				// Remove from closed list
+				for (int i = 0; i < closed.size(); i++)
 				{
-					closed.at(i) = closed.back();
-					closed.pop_back();
+					if (map1[(int)parentID.x - 1][(int)parentID.y + 1].GetPosition() == closed[i]->GetPosition())
+					{
+						closed.at(i) = closed.back();
+						closed.pop_back();
+					}
 				}
 			}
+			break;
+		default:
+			break;
 		}
-		break;
-	default:
-		break;
-	}
 
-	//map1[(int)parentID.x + 1][(int)parentID.y - 1];
-	switch (ShouldAdd(map1, (int)parentID.x + 1, (int)parentID.y - 1, 0, width, height))
-	{
-	case 1:
-		opened.push_back(&(map1[(int)parentID.x + 1][(int)parentID.y - 1]));
-		break;
-	case 2:
-		// Compare and update value and parent if needed
-		if (map1[(int)parentID.x + 1][(int)parentID.y - 1].GetValueSofar() < parentValue + 1)
+		//map1[(int)parentID.x + 1][(int)parentID.y - 1];
+		switch (ShouldAdd(map1, (int)parentID.x + 1, (int)parentID.y - 1, 4, width, height))
 		{
-			map1[(int)parentID.x + 1][(int)parentID.y - 1].SetValues(parentValue, goal);
-			map1[(int)parentID.x + 1][(int)parentID.y - 1].SetParent(parentID);
-		}
-		break;
-	case 3:
-		// If new value is smaller than existing
-		if (map1[(int)parentID.x + 1][(int)parentID.y - 1].GetValueSofar() < parentValue + 1)
-		{
+		case 1:
 			// Update Value and Parent
-			map1[(int)parentID.x + 1][(int)parentID.y - 1].SetValues(parentValue, goal);
-			map1[(int)parentID.x + 1][(int)parentID.y - 1].SetParent(parentID);
+			map1[(int)parentID.x + 1][(int)parentID.y].SetValues(parentValue, goal);
+			map1[(int)parentID.x + 1][(int)parentID.y].SetParent(parentID);
 
 			// Add to open list
 			opened.push_back(&(map1[(int)parentID.x + 1][(int)parentID.y - 1]));
-
-			// Remove from closed list
-			for (int i = 0; i < closed.size(); i++)
+			break;
+		case 2:
+			// Compare and update value and parent if needed
+			if (map1[(int)parentID.x + 1][(int)parentID.y - 1].GetValueSofar() < parentValue + 1)
 			{
-				if (map1[(int)parentID.x + 1][(int)parentID.y - 1].GetPosition() == closed[i]->GetPosition())
+				map1[(int)parentID.x + 1][(int)parentID.y - 1].SetValues(parentValue, goal);
+				map1[(int)parentID.x + 1][(int)parentID.y - 1].SetParent(parentID);
+			}
+			break;
+		case 3:
+			// If new value is smaller than existing
+			if (map1[(int)parentID.x + 1][(int)parentID.y - 1].GetValueSofar() < parentValue + 1)
+			{
+				// Update Value and Parent
+				map1[(int)parentID.x + 1][(int)parentID.y - 1].SetValues(parentValue, goal);
+				map1[(int)parentID.x + 1][(int)parentID.y - 1].SetParent(parentID);
+
+				// Add to open list
+				opened.push_back(&(map1[(int)parentID.x + 1][(int)parentID.y - 1]));
+
+				// Remove from closed list
+				for (int i = 0; i < closed.size(); i++)
 				{
-					closed.at(i) = closed.back();
-					closed.pop_back();
+					if (map1[(int)parentID.x + 1][(int)parentID.y - 1].GetPosition() == closed[i]->GetPosition())
+					{
+						closed.at(i) = closed.back();
+						closed.pop_back();
+					}
 				}
 			}
+			break;
+		default:
+			break;
 		}
-		break;
-	default:
-		break;
 	}
+
 }
 
 void Algorithm::Breadth(Node** map1, int width, int height, Play::Vector2f goal)

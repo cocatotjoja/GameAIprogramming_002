@@ -2,6 +2,7 @@
 #define PLAY_USING_GAMEOBJECT_MANAGER
 #include "Play.h"
 #include "node.h"
+#include "algorithm.h"
 
 int DISPLAY_WIDTH = 600;
 int DISPLAY_HEIGHT = 600;
@@ -11,6 +12,9 @@ int DISPLAY_SCALE = 2;
 Node nodes1[16][16];
 Node nodes2[16][16];
 Node nodes3[26][25];
+
+//Create Algorithm
+Algorithm pathfinder;
 
 Play::Vector2f start;
 Play::Vector2f goal;
@@ -319,6 +323,7 @@ bool MainGameUpdate( float elapsedTime )
 	{
 	case 1:
 		// Update nodes1
+		pathfinder.aStar(,);
 		break;
 	case 2:
 		// Update nodes2

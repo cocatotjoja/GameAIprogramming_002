@@ -49,6 +49,11 @@ void Node::SetParent(Play::Vector2f parentNode)
 	parent = parentNode;
 }
 
+Play::Vector2f Node::GetParent()
+{
+	return parent;
+}
+
 void Node::ResetNode()
 {
 	valueSofar = NULL;

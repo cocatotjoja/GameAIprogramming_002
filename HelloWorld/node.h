@@ -26,6 +26,7 @@ public:
 	void SetBlocked(bool block);
 	void SetValues(float parentValue, Play::Vector2f goal);
 	void SetParent(Play::Vector2f parentNode);
+	Play::Vector2f GetParent();
 	void ResetNode();
 	float GetValueSofar();
 	float GetValueLeft();
