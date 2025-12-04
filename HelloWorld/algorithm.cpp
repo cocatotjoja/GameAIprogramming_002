@@ -17,8 +17,9 @@ bool Algorithm::IsWithinMap(int x, int y, int width, int height)
 int Algorithm::ShouldAdd(Node** map1, int x, int y, int corner, int width, int height)
 {
 	//Chacke if within map
-	if (x < width - 1 && x > 0 && y < height -1 && y >= 0)
+	if (x < width - 1 && x > 0 && y < height -1 && y > 0)
 	{
+		Play::DrawDebugText({ 300, 550 }, "In map", Play::cBlack);
 		//Check diagonal
 		switch (corner)
 		{
@@ -49,16 +50,20 @@ int Algorithm::ShouldAdd(Node** map1, int x, int y, int corner, int width, int h
 		default:
 			break;
 		}
+
 		// Check state, Unchecked = 1, Opened = 2, Closed = 3
 		switch (map1[x][y].GetState())
 		{
 		case 1:
+			Play::DrawDebugText({ 300, 500 }, "Add", Play::cBlack);
 			return 1;
 			break;
 		case 2:
+			//Play::DrawDebugText({ 300, 500 }, "Update", Play::cBlack);
 			return 2;
 			break;
 		case 3:
+			Play::DrawDebugText({ 300, 500 }, "Add", Play::cBlack);
 			return 3;
 			break;
 		default:
@@ -67,22 +72,26 @@ int Algorithm::ShouldAdd(Node** map1, int x, int y, int corner, int width, int h
 	}
 	else
 	{
+		//Play::DrawDebugText({ 300, 500 }, "dont Add", Play::cBlack);
 		return 0;
 	}
 }
 
-void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f goal)
+void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f start, Play::Vector2f goal)
 {
 	if (found)
 	{
+		Play::DrawDebugText({ 300, 500 }, "found", Play::cBlack);
 		return;
 	}
 	//Check if opened is empty, if so add the start node
 	if (opened.empty())
 	{
+		int x = start.x / 20;
+		int y = start.y / 20;
 		opened.push_back(&(map1[1][height-1]));
-		map1[1][height - 1].SetValues(0, goal);
-		map1[1][height - 1].SetState(2);
+		map1[x][y].SetValues(0, goal);
+		map1[x][y].SetState(2);
 
 	}
 	// Loop through opened nodes and find the smallest one
@@ -97,6 +106,9 @@ void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f goal)
 		}
 	}
 
+	std::string idStr = std::to_string(smallestValue);
+	//Play::DrawDebugText({ 300, 500 }, idStr.c_str(), Play::cBlack);
+
 	if (opened[smallestID]->GetPosition() == goal)
 	{
 		Play::Vector2f currentID = opened[smallestID]->GetPosition() / 20;
@@ -109,8 +121,15 @@ void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f goal)
 	}
 	else
 	{
+		//Play::DrawDebugText({ 300, 500 }, "not at goal", Play::cBlack);
 		Play::Vector2f parentID = opened[smallestID]->GetPosition() / 20;
 		float parentValue = opened[smallestID]->GetValueSofar();
+
+
+		std::string xStr = std::to_string((int)parentID.x + 1);
+		Play::DrawDebugText({ 300, 500 }, xStr.c_str(), Play::cBlack);
+		std::string yStr = std::to_string((int)parentID.y);
+		Play::DrawDebugText({ 320, 500 }, yStr.c_str(), Play::cBlack);
 
 		// Adjacent nodes
 
@@ -125,6 +144,7 @@ void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f goal)
 
 			// Add to open list
 			opened.push_back(&(map1[(int)parentID.x + 1][(int)parentID.y]));
+			Play::DrawDebugText({ 300, 500 }, "node added to open", Play::cBlack);
 			break;
 		case 2:
 			// Compare and update value and parent if needed
@@ -156,6 +176,7 @@ void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f goal)
 					}
 				}
 			}
+			Play::DrawDebugText({ 300, 500 }, "node added to open", Play::cBlack);
 			break;
 		default:
 			break;
@@ -172,6 +193,7 @@ void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f goal)
 
 			// Add to open list
 			opened.push_back(&(map1[(int)parentID.x - 1][(int)parentID.y]));
+			Play::DrawDebugText({ 300, 500 }, "node added to open", Play::cBlack);
 			break;
 		case 2:
 			// Compare and update value and parent if needed
@@ -203,6 +225,7 @@ void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f goal)
 					}
 				}
 			}
+			Play::DrawDebugText({ 300, 500 }, "node added to open", Play::cBlack);
 			break;
 		default:
 			break;
@@ -219,6 +242,7 @@ void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f goal)
 
 			// Add to open list
 			opened.push_back(&(map1[(int)parentID.x][(int)parentID.y + 1]));
+			Play::DrawDebugText({ 300, 500 }, "node added to open", Play::cBlack);
 			break;
 		case 2:
 			// Compare and update value and parent if needed
@@ -227,6 +251,7 @@ void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f goal)
 				map1[(int)parentID.x][(int)parentID.y + 1].SetValues(parentValue, goal);
 				map1[(int)parentID.x][(int)parentID.y + 1].SetParent(parentID);
 			}
+			Play::DrawDebugText({ 300, 500 }, "node added to open", Play::cBlack);
 			break;
 		case 3:
 			// If new value is smaller than existing
@@ -250,6 +275,7 @@ void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f goal)
 					}
 				}
 			}
+			Play::DrawDebugText({ 300, 500 }, "node added to open", Play::cBlack);
 			break;
 		default:
 			break;
@@ -266,6 +292,7 @@ void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f goal)
 
 			// Add to open list
 			opened.push_back(&(map1[(int)parentID.x][(int)parentID.y - 1]));
+			Play::DrawDebugText({ 300, 500 }, "node added to open", Play::cBlack);
 			break;
 		case 2:
 			// Compare and update value and parent if needed
@@ -297,6 +324,7 @@ void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f goal)
 					}
 				}
 			}
+			Play::DrawDebugText({ 300, 500 }, "node added to open", Play::cBlack);
 			break;
 		default:
 			break;
@@ -493,9 +521,14 @@ void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f goal)
 			break;
 		}
 
-		// Move currently currently looked at node to closed list and update its state
-		opened[smallestID]->SetState(3);
-		closed.push_back(opened[smallestID]);
+		// Add currently looked at node to closed list and update its state
+		//opened[smallestID]->SetState(3);
+		map1[(int)parentID.x][(int)parentID.y].SetState(3);
+		closed.push_back(&(map1[(int)parentID.x][(int)parentID.y]));
+
+		// Remove currently looked at node from opened list
+		opened.at(smallestID) = closed.back();
+		opened.pop_back();
 	}
 
 }

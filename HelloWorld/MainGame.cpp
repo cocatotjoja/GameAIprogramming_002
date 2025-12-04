@@ -1,5 +1,6 @@
 #define PLAY_IMPLEMENTATION
 #define PLAY_USING_GAMEOBJECT_MANAGER
+#include <iostream>
 #include "Play.h"
 #include "node.h"
 #include "algorithm.h"
@@ -24,6 +25,8 @@ Play::Vector2f goal;
 int currentMap = 1;
 int currentAlgorithm = 1;
 
+int loops = 0;
+
 
 // The entry point for a PlayBuffer program
 void MainGameEntry( PLAY_IGNORE_COMMAND_LINE )
@@ -32,24 +35,6 @@ void MainGameEntry( PLAY_IGNORE_COMMAND_LINE )
 	for (int i = 0; i < 16; i++) nodes2[i] = new Node[16];
 	for (int i = 0; i < 26; i++) nodes3[i] = new Node[25];
 
-	// Set start and goal positions
-	/*
-	int width = map1width;
-	int height = map1height;
-	const char* nowMap = map1;
-
-	Node* myMap = new Node[height * width];
-
-	for (int i = 0; i < width * height; i++)
-	{
-		int x = i % width;
-		int y = i / width;
-		myMap[i] = Node(x, y);
-		if (nowMap[i] == 'X')
-		{
-			myMap[i].SetBlocked(true);
-		}
-	}*/
 
 	// Setup Maps
 	switch (currentMap)
@@ -337,15 +322,13 @@ void MainGameEntry( PLAY_IGNORE_COMMAND_LINE )
 bool MainGameUpdate( float elapsedTime )
 {
 	Play::ClearDrawingBuffer( Play::cWhite );
-	//Play::DrawDebugText( { DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2 }, "Hello World!" );
 
 	//Update array
 	switch (currentMap)
 	{
 	case 1:
 		// Update nodes1
-		Play::DrawDebugText({ DISPLAY_WIDTH / 2, DISPLAY_HEIGHT }, "Hello World!", Play::cBlack);
-		pathfinder.aStar((Node**)nodes1, 16, 16, goal);
+		pathfinder.aStar((Node**)nodes1, 16, 16, start, goal);
 		break;
 	case 2:
 		// Update nodes2
@@ -356,7 +339,13 @@ bool MainGameUpdate( float elapsedTime )
 	default:
 		break;
 	}
+
+
 	
+	// Debug state update
+	int nodeState = 0;
+
+
 	// Draw map
 	switch (currentMap)
 	{
@@ -381,6 +370,12 @@ bool MainGameUpdate( float elapsedTime )
 				else
 				{
 					Play::DrawRect(nodes1[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes1[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cGrey, true);
+				}
+
+				// Debug state update
+				if (nodes1[i][j].GetState() == 2)
+				{
+					nodeState++;
 				}
 			}
 		}
@@ -439,6 +434,10 @@ bool MainGameUpdate( float elapsedTime )
 		break;
 	}
 
+	// Debug state update
+	std::string stateStr = std::to_string(nodeState);
+	//Play::DrawDebugText({ DISPLAY_WIDTH / 2, 500 }, stateStr.c_str(), Play::cBlack);
+
 	// Draw Start & Goal
 	//Play::DrawRect(start + Play::Vector2f{ 1,1 }, start + Play::Vector2f{ 18,18 }, Play::cGreen, true);
 	//Play::DrawRect(goal + Play::Vector2f{ 1,1 }, goal + Play::Vector2f{ 18,18 }, Play::cRed, true);
@@ -454,3 +453,21 @@ int MainGameExit( void )
 	return PLAY_OK;
 }
 
+
+/*
+	int width = map1width;
+	int height = map1height;
+	const char* nowMap = map1;
+
+	Node* myMap = new Node[height * width];
+
+	for (int i = 0; i < width * height; i++)
+	{
+		int x = i % width;
+		int y = i / width;
+		myMap[i] = Node(x, y);
+		if (nowMap[i] == 'X')
+		{
+			myMap[i].SetBlocked(true);
+		}
+	}*/
