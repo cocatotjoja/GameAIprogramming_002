@@ -59,7 +59,7 @@ void Node::ResetNode()
 	valueSofar = NULL;
 	valueLeft = NULL;
 	valueTotal = NULL;
-	parent = NULL;
+	parent = ID;
 	state = 0;
 	blocked = false;
 }

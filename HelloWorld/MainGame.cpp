@@ -3,15 +3,16 @@
 #include "Play.h"
 #include "node.h"
 #include "algorithm.h"
+#include "themaps.h"
 
 int DISPLAY_WIDTH = 600;
 int DISPLAY_HEIGHT = 600;
 int DISPLAY_SCALE = 2;
 
 // Create Node arrays
-Node nodes1[16][16];
-Node nodes2[16][16];
-Node nodes3[26][25];
+Node** nodes1 = new Node*[16];
+Node** nodes2 = new Node*[16];
+Node** nodes3 = new Node*[26];
 
 //Create Algorithm
 Algorithm pathfinder;
@@ -20,15 +21,35 @@ Play::Vector2f start;
 Play::Vector2f goal;
 
 
-int currentMap = 2;
+int currentMap = 1;
 int currentAlgorithm = 1;
 
 
 // The entry point for a PlayBuffer program
 void MainGameEntry( PLAY_IGNORE_COMMAND_LINE )
 {
+	for (int i = 0; i < 16; i++) nodes1[i] = new Node[16];
+	for (int i = 0; i < 16; i++) nodes2[i] = new Node[16];
+	for (int i = 0; i < 26; i++) nodes3[i] = new Node[25];
+
 	// Set start and goal positions
-	
+	/*
+	int width = map1width;
+	int height = map1height;
+	const char* nowMap = map1;
+
+	Node* myMap = new Node[height * width];
+
+	for (int i = 0; i < width * height; i++)
+	{
+		int x = i % width;
+		int y = i / width;
+		myMap[i] = Node(x, y);
+		if (nowMap[i] == 'X')
+		{
+			myMap[i].SetBlocked(true);
+		}
+	}*/
 
 	// Setup Maps
 	switch (currentMap)
@@ -300,8 +321,8 @@ void MainGameEntry( PLAY_IGNORE_COMMAND_LINE )
 		}
 
 		// Set start and goal positions
-		start = Play::Vector2D{ 1, 24 } *20;
-		goal = Play::Vector2D{ 25, 1 } *20;
+		start = Play::Vector2D{ 1, 23 } *20;
+		goal = Play::Vector2D{ 24, 1 } *20;
 
 		break;
 	default:
@@ -316,14 +337,15 @@ void MainGameEntry( PLAY_IGNORE_COMMAND_LINE )
 bool MainGameUpdate( float elapsedTime )
 {
 	Play::ClearDrawingBuffer( Play::cWhite );
-	Play::DrawDebugText( { DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2 }, "Hello World!" );
+	//Play::DrawDebugText( { DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2 }, "Hello World!" );
 
 	//Update array
 	switch (currentMap)
 	{
 	case 1:
 		// Update nodes1
-		pathfinder.aStar(,);
+		Play::DrawDebugText({ DISPLAY_WIDTH / 2, DISPLAY_HEIGHT }, "Hello World!", Play::cBlack);
+		pathfinder.aStar((Node**)nodes1, 16, 16, goal);
 		break;
 	case 2:
 		// Update nodes2
@@ -348,13 +370,13 @@ bool MainGameUpdate( float elapsedTime )
 				{
 					Play::DrawRect(nodes1[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes1[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cBlack, true);
 				}
-				else if (nodes2[i][j].GetState() == 2)
+				else if (nodes1[i][j].GetState() == 2)
 				{
-					Play::DrawRect(nodes2[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes2[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cBlue, true);
+					Play::DrawRect(nodes1[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes1[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cBlue, true);
 				}
-				else if (nodes2[i][j].GetState() == 3)
+				else if (nodes1[i][j].GetState() == 3)
 				{
-					Play::DrawRect(nodes2[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes2[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cMagenta, true);
+					Play::DrawRect(nodes1[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes1[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cMagenta, true);
 				}
 				else
 				{
@@ -398,13 +420,13 @@ bool MainGameUpdate( float elapsedTime )
 				{
 					Play::DrawRect(nodes3[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes3[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cBlack, true);
 				}
-				else if (nodes2[i][j].GetState() == 2)
+				else if (nodes3[i][j].GetState() == 2)
 				{
-					Play::DrawRect(nodes2[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes2[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cBlue, true);
+					Play::DrawRect(nodes3[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes3[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cBlue, true);
 				}
-				else if (nodes2[i][j].GetState() == 3)
+				else if (nodes3[i][j].GetState() == 3)
 				{
-					Play::DrawRect(nodes2[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes2[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cMagenta, true);
+					Play::DrawRect(nodes3[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes3[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cMagenta, true);
 				}
 				else
 				{
@@ -418,8 +440,8 @@ bool MainGameUpdate( float elapsedTime )
 	}
 
 	// Draw Start & Goal
-	Play::DrawRect(start + Play::Vector2f{ 1,1 }, start + Play::Vector2f{ 18,18 }, Play::cGreen, true);
-	Play::DrawRect(goal + Play::Vector2f{ 1,1 }, goal + Play::Vector2f{ 18,18 }, Play::cRed, true);
+	//Play::DrawRect(start + Play::Vector2f{ 1,1 }, start + Play::Vector2f{ 18,18 }, Play::cGreen, true);
+	//Play::DrawRect(goal + Play::Vector2f{ 1,1 }, goal + Play::Vector2f{ 18,18 }, Play::cRed, true);
 
 	Play::PresentDrawingBuffer();
 	return Play::KeyDown( KEY_ESCAPE );
