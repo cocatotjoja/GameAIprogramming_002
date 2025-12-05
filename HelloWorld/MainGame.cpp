@@ -22,7 +22,7 @@ Play::Vector2f start;
 Play::Vector2f goal;
 
 
-int currentMap = 1;
+int currentMap = 3;
 int currentAlgorithm = 1;
 
 int loops = 0;
@@ -332,9 +332,11 @@ bool MainGameUpdate( float elapsedTime )
 		break;
 	case 2:
 		// Update nodes2
+		pathfinder.aStar((Node**)nodes2, 16, 16, start, goal);
 		break;
 	case 3:
 		// Update nodes3
+		pathfinder.aStar((Node**)nodes3, 26, 25, start, goal);
 		break;
 	default:
 		break;
