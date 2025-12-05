@@ -53,7 +53,7 @@ int Algorithm::ShouldAdd(Node** map1, int x, int y, int corner, int width, int h
 
 		std::string stateStr;
 		stateStr = std::to_string(map1[x][y].GetState());
-		Play::DrawDebugText({ 320, 500 }, stateStr.c_str(), Play::cBlack);
+		//Play::DrawDebugText({ 320, 500 }, stateStr.c_str(), Play::cBlack);
 		
 		// Check state, Unchecked = 1, Opened = 2, Closed = 3
 		switch (map1[x][y].GetState())
@@ -83,11 +83,13 @@ void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f start, 
 {
 	if (found)
 	{
+		Play::DrawDebugText({ 300, 550 }, "Goal found", Play::cBlack);
 		return;
 	}
 	//Check if opened is empty, if so add the start node
 	if (opened.empty())
 	{
+		Play::DrawDebugText({ 300, 550 }, "List empty", Play::cBlack);
 		int x = start.x / 20;
 		int y = start.y / 20;
 		opened.push_back(&(map1[1][height-2]));
@@ -107,7 +109,10 @@ void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f start, 
 		}
 	}
 
-
+	std::string xStr = std::to_string(opened[smallestID]->GetID().x);
+	std::string yStr = std::to_string(opened[smallestID]->GetID().y);
+	Play::DrawDebugText({ 300, 400 }, yStr.c_str(), Play::cBlack);
+	Play::DrawDebugText({ 320, 450 }, xStr.c_str(), Play::cBlack);
 
 	if (opened[smallestID]->GetPosition() == goal)
 	{
@@ -133,7 +138,7 @@ void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f start, 
 		{
 		case 1:
 			// Update Value, Parent, and state
-			map1[(int)parentID.x + 1][(int)parentID.y].SetValues(parentValue, goal);
+			map1[(int)parentID.x + 1][(int)parentID.y].SetValues(parentValue + 1, goal);
 			map1[(int)parentID.x + 1][(int)parentID.y].SetParent(parentID);
 			map1[(int)parentID.x + 1][(int)parentID.y].SetState(2);
 
@@ -145,7 +150,7 @@ void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f start, 
 			// Compare and update value and parent if needed
 			if (map1[(int)parentID.x + 1][(int)parentID.y].GetValueSofar() < parentValue + 1)
 			{
-				map1[(int)parentID.x + 1][(int)parentID.y].SetValues(parentValue, goal);
+				map1[(int)parentID.x + 1][(int)parentID.y].SetValues(parentValue + 1, goal);
 				map1[(int)parentID.x + 1][(int)parentID.y].SetParent(parentID);
 			}
 			break;
@@ -154,7 +159,7 @@ void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f start, 
 			if (map1[(int)parentID.x + 1][(int)parentID.y].GetValueSofar() < parentValue + 1)
 			{
 				// Update Value, Parent, and state
-				map1[(int)parentID.x + 1][(int)parentID.y].SetValues(parentValue, goal);
+				map1[(int)parentID.x + 1][(int)parentID.y].SetValues(parentValue + 1, goal);
 				map1[(int)parentID.x + 1][(int)parentID.y].SetParent(parentID);
 				map1[(int)parentID.x + 1][(int)parentID.y].SetState(2);
 
@@ -182,7 +187,7 @@ void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f start, 
 		{
 		case 1:
 			// Update Value, Parent, and state
-			map1[(int)parentID.x - 1][(int)parentID.y].SetValues(parentValue, goal);
+			map1[(int)parentID.x - 1][(int)parentID.y].SetValues(parentValue + 1, goal);
 			map1[(int)parentID.x - 1][(int)parentID.y].SetParent(parentID);
 			map1[(int)parentID.x - 1][(int)parentID.y].SetState(2);
 
@@ -194,7 +199,7 @@ void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f start, 
 			// Compare and update value and parent if needed
 			if (map1[(int)parentID.x - 1][(int)parentID.y].GetValueSofar() < parentValue + 1)
 			{
-				map1[(int)parentID.x - 1][(int)parentID.y].SetValues(parentValue, goal);
+				map1[(int)parentID.x - 1][(int)parentID.y].SetValues(parentValue + 1, goal);
 				map1[(int)parentID.x - 1][(int)parentID.y].SetParent(parentID);
 			}
 			break;
@@ -203,7 +208,7 @@ void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f start, 
 			if (map1[(int)parentID.x - 1][(int)parentID.y].GetValueSofar() < parentValue + 1)
 			{
 				// Update Value, Parent, and state
-				map1[(int)parentID.x - 1][(int)parentID.y].SetValues(parentValue, goal);
+				map1[(int)parentID.x - 1][(int)parentID.y].SetValues(parentValue + 1, goal);
 				map1[(int)parentID.x - 1][(int)parentID.y].SetParent(parentID);
 				map1[(int)parentID.x - 1][(int)parentID.y].SetState(2);
 
@@ -231,7 +236,7 @@ void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f start, 
 		{
 		case 1:
 			// Update Value, Parent, and state
-			map1[(int)parentID.x][(int)parentID.y + 1].SetValues(parentValue, goal);
+			map1[(int)parentID.x][(int)parentID.y + 1].SetValues(parentValue + 1, goal);
 			map1[(int)parentID.x][(int)parentID.y + 1].SetParent(parentID);
 			map1[(int)parentID.x][(int)parentID.y + 1].SetState(2);
 
@@ -243,7 +248,7 @@ void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f start, 
 			// Compare and update value and parent if needed
 			if (map1[(int)parentID.x][(int)parentID.y + 1].GetValueSofar() < parentValue + 1)
 			{
-				map1[(int)parentID.x][(int)parentID.y + 1].SetValues(parentValue, goal);
+				map1[(int)parentID.x][(int)parentID.y + 1].SetValues(parentValue + 1, goal);
 				map1[(int)parentID.x][(int)parentID.y + 1].SetParent(parentID);
 			}
 			Play::DrawDebugText({ 300, 500 }, "node added to open", Play::cBlack);
@@ -253,7 +258,7 @@ void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f start, 
 			if (map1[(int)parentID.x][(int)parentID.y + 1].GetValueSofar() < parentValue + 1)
 			{
 				// Update Value, Parent, and state
-				map1[(int)parentID.x][(int)parentID.y + 1].SetValues(parentValue, goal);
+				map1[(int)parentID.x][(int)parentID.y + 1].SetValues(parentValue + 1, goal);
 				map1[(int)parentID.x][(int)parentID.y + 1].SetParent(parentID);
 				map1[(int)parentID.x][(int)parentID.y + 1].SetState(2);
 
@@ -281,7 +286,7 @@ void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f start, 
 		{
 		case 1:
 			// Update Value, Parent, and state
-			map1[(int)parentID.x][(int)parentID.y - 1].SetValues(parentValue, goal);
+			map1[(int)parentID.x][(int)parentID.y - 1].SetValues(parentValue + 1, goal);
 			map1[(int)parentID.x][(int)parentID.y - 1].SetParent(parentID);
 			map1[(int)parentID.x][(int)parentID.y - 1].SetState(2);
 
@@ -293,7 +298,7 @@ void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f start, 
 			// Compare and update value and parent if needed
 			if (map1[(int)parentID.x][(int)parentID.y - 1].GetValueSofar() < parentValue + 1)
 			{
-				map1[(int)parentID.x][(int)parentID.y - 1].SetValues(parentValue, goal);
+				map1[(int)parentID.x][(int)parentID.y - 1].SetValues(parentValue + 1, goal);
 				map1[(int)parentID.x][(int)parentID.y - 1].SetParent(parentID);
 			}
 			break;
@@ -302,7 +307,7 @@ void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f start, 
 			if (map1[(int)parentID.x][(int)parentID.y - 1].GetValueSofar() < parentValue + 1)
 			{
 				// Update Value, Parent, and state
-				map1[(int)parentID.x][(int)parentID.y - 1].SetValues(parentValue, goal);
+				map1[(int)parentID.x][(int)parentID.y - 1].SetValues(parentValue + 1, goal);
 				map1[(int)parentID.x][(int)parentID.y - 1].SetParent(parentID);
 				map1[(int)parentID.x][(int)parentID.y - 1].SetState(2);
 
@@ -333,7 +338,7 @@ void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f start, 
 		{
 		case 1:
 			// Update Value, Parent, and state
-			map1[(int)parentID.x + 1][(int)parentID.y + 1].SetValues(parentValue, goal);
+			map1[(int)parentID.x + 1][(int)parentID.y + 1].SetValues(parentValue + 1.4f, goal);
 			map1[(int)parentID.x + 1][(int)parentID.y + 1].SetParent(parentID);
 			map1[(int)parentID.x + 1][(int)parentID.y + 1].SetState(2);
 
@@ -344,16 +349,16 @@ void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f start, 
 			// Compare and update value and parent if needed
 			if (map1[(int)parentID.x + 1][(int)parentID.y + 1].GetValueSofar() < parentValue + 1)
 			{
-				map1[(int)parentID.x + 1][(int)parentID.y + 1].SetValues(parentValue, goal);
+				map1[(int)parentID.x + 1][(int)parentID.y + 1].SetValues(parentValue + 1.4f, goal);
 				map1[(int)parentID.x + 1][(int)parentID.y + 1].SetParent(parentID);
 			}
 			break;
 		case 3:
 			// If new value is smaller than existing
-			if (map1[(int)parentID.x + 1][(int)parentID.y + 1].GetValueSofar() < parentValue + 1)
+			if (map1[(int)parentID.x + 1][(int)parentID.y + 1].GetValueSofar() < parentValue + 1.4f)
 			{
 				// Update Value, Parent, and state
-				map1[(int)parentID.x + 1][(int)parentID.y + 1].SetValues(parentValue, goal);
+				map1[(int)parentID.x + 1][(int)parentID.y + 1].SetValues(parentValue + 1.4f, goal);
 				map1[(int)parentID.x + 1][(int)parentID.y + 1].SetParent(parentID);
 				map1[(int)parentID.x + 1][(int)parentID.y + 1].SetState(2);
 
@@ -380,7 +385,7 @@ void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f start, 
 		{
 		case 1:
 			// Update Value, Parent, and state
-			map1[(int)parentID.x - 1][(int)parentID.y - 1].SetValues(parentValue, goal);
+			map1[(int)parentID.x - 1][(int)parentID.y - 1].SetValues(parentValue + 1.4f, goal);
 			map1[(int)parentID.x - 1][(int)parentID.y - 1].SetParent(parentID);
 			map1[(int)parentID.x - 1][(int)parentID.y - 1].SetState(2);
 
@@ -391,16 +396,16 @@ void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f start, 
 			// Compare and update value and parent if needed
 			if (map1[(int)parentID.x - 1][(int)parentID.y - 1].GetValueSofar() < parentValue + 1)
 			{
-				map1[(int)parentID.x - 1][(int)parentID.y - 1].SetValues(parentValue, goal);
+				map1[(int)parentID.x - 1][(int)parentID.y - 1].SetValues(parentValue + 1.4f, goal);
 				map1[(int)parentID.x - 1][(int)parentID.y - 1].SetParent(parentID);
 			}
 			break;
 		case 3:
 			// If new value is smaller than existing
-			if (map1[(int)parentID.x - 1][(int)parentID.y - 1].GetValueSofar() < parentValue + 1)
+			if (map1[(int)parentID.x - 1][(int)parentID.y - 1].GetValueSofar() < parentValue + 1.4f)
 			{
 				// Update Value, Parent, and state
-				map1[(int)parentID.x - 1][(int)parentID.y - 1].SetValues(parentValue, goal);
+				map1[(int)parentID.x - 1][(int)parentID.y - 1].SetValues(parentValue + 1.4f, goal);
 				map1[(int)parentID.x - 1][(int)parentID.y - 1].SetParent(parentID);
 				map1[(int)parentID.x - 1][(int)parentID.y - 1].SetState(2);
 
@@ -427,7 +432,7 @@ void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f start, 
 		{
 		case 1:
 			// Update Value, Parent, and state
-			map1[(int)parentID.x - 1][(int)parentID.y + 1].SetValues(parentValue, goal);
+			map1[(int)parentID.x - 1][(int)parentID.y + 1].SetValues(parentValue + 1.4f, goal);
 			map1[(int)parentID.x - 1][(int)parentID.y + 1].SetParent(parentID);
 			map1[(int)parentID.x - 1][(int)parentID.y + 1].SetState(2);
 
@@ -438,16 +443,16 @@ void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f start, 
 			// Compare and update value and parent if needed
 			if (map1[(int)parentID.x - 1][(int)parentID.y + 1].GetValueSofar() < parentValue + 1)
 			{
-				map1[(int)parentID.x - 1][(int)parentID.y + 1].SetValues(parentValue, goal);
+				map1[(int)parentID.x - 1][(int)parentID.y + 1].SetValues(parentValue + 1.4f, goal);
 				map1[(int)parentID.x - 1][(int)parentID.y + 1].SetParent(parentID);
 			}
 			break;
 		case 3:
 			// If new value is smaller than existing
-			if (map1[(int)parentID.x - 1][(int)parentID.y + 1].GetValueSofar() < parentValue + 1)
+			if (map1[(int)parentID.x - 1][(int)parentID.y + 1].GetValueSofar() < parentValue + 1.4f)
 			{
 				// Update Value, Parent, and state
-				map1[(int)parentID.x - 1][(int)parentID.y + 1].SetValues(parentValue, goal);
+				map1[(int)parentID.x - 1][(int)parentID.y + 1].SetValues(parentValue + 1.4f, goal);
 				map1[(int)parentID.x - 1][(int)parentID.y + 1].SetParent(parentID);
 				map1[(int)parentID.x - 1][(int)parentID.y + 1].SetState(2);
 
@@ -474,7 +479,7 @@ void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f start, 
 		{
 		case 1:
 			// Update Value, Parent, and state
-			map1[(int)parentID.x + 1][(int)parentID.y - 1].SetValues(parentValue, goal);
+			map1[(int)parentID.x + 1][(int)parentID.y - 1].SetValues(parentValue + 1.4f, goal);
 			map1[(int)parentID.x + 1][(int)parentID.y - 1].SetParent(parentID);
 			map1[(int)parentID.x + 1][(int)parentID.y - 1].SetState(2);
 
@@ -485,16 +490,16 @@ void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f start, 
 			// Compare and update value and parent if needed
 			if (map1[(int)parentID.x + 1][(int)parentID.y - 1].GetValueSofar() < parentValue + 1)
 			{
-				map1[(int)parentID.x + 1][(int)parentID.y - 1].SetValues(parentValue, goal);
+				map1[(int)parentID.x + 1][(int)parentID.y - 1].SetValues(parentValue + 1.4f, goal);
 				map1[(int)parentID.x + 1][(int)parentID.y - 1].SetParent(parentID);
 			}
 			break;
 		case 3:
 			// If new value is smaller than existing
-			if (map1[(int)parentID.x + 1][(int)parentID.y - 1].GetValueSofar() < parentValue + 1)
+			if (map1[(int)parentID.x + 1][(int)parentID.y - 1].GetValueSofar() < parentValue + 1.4f)
 			{
 				// Update Value, Parent, and state
-				map1[(int)parentID.x + 1][(int)parentID.y - 1].SetValues(parentValue, goal);
+				map1[(int)parentID.x + 1][(int)parentID.y - 1].SetValues(parentValue + 1.4f, goal);
 				map1[(int)parentID.x + 1][(int)parentID.y - 1].SetParent(parentID);
 				map1[(int)parentID.x + 1][(int)parentID.y - 1].SetState(2);
 
@@ -523,10 +528,13 @@ void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f start, 
 		closed.push_back(&(map1[(int)parentID.x][(int)parentID.y]));
 
 		// Remove currently looked at node from opened list
-		opened.at(smallestID) = closed.back();
+		opened.at(smallestID) = opened.back();
 		opened.pop_back();
-	}
 
+
+		std::string debugStr = std::to_string(opened.size());
+		//Play::DrawDebugText({ 300, 450 }, debugStr.c_str(), Play::cBlack);
+	}
 }
 
 void Algorithm::Breadth(Node** map1, int width, int height, Play::Vector2f goal)
