@@ -9,7 +9,7 @@ private:
 	float valueSofar = NULL;
 	float valueLeft = NULL;
 	float valueTotal = NULL;
-	Play::Vector2f parent = ID;
+	Play::Vector2f parent ;
 	
 	// Unchecked = 1, Opened = 2, Closed = 3, Path = 4
 	int state = 1;

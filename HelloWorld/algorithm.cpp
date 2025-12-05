@@ -19,6 +19,11 @@ int Algorithm::ShouldAdd(Node** map1, int x, int y, int corner, int width, int h
 	//Chacke if within map
 	if (x < width - 1 && x > 0 && y < height -1 && y > 0)
 	{
+		// Check if blocked
+		if (map1[x][y].IsBlocked())
+		{
+			return 0;
+		}
 		//Play::DrawDebugText({ 300, 550 }, "In map", Play::cBlack);
 		//Check diagonal
 		switch (corner)
@@ -83,18 +88,17 @@ void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f start, 
 {
 	if (found)
 	{
-		Play::DrawDebugText({ 300, 550 }, "Goal found", Play::cBlack);
 		return;
 	}
 	//Check if opened is empty, if so add the start node
 	if (opened.empty())
 	{
-		Play::DrawDebugText({ 300, 550 }, "List empty", Play::cBlack);
 		int x = start.x / 20;
 		int y = start.y / 20;
 		opened.push_back(&(map1[1][height-2]));
 		map1[x][y].SetValues(0, goal);
 		map1[x][y].SetState(2);
+		map1[x][y].SetParent(map1[x][y].GetID());
 
 	}
 	// Loop through opened nodes and find the smallest one
@@ -109,19 +113,17 @@ void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f start, 
 		}
 	}
 
-	std::string xStr = std::to_string(opened[smallestID]->GetID().x);
-	std::string yStr = std::to_string(opened[smallestID]->GetID().y);
-	Play::DrawDebugText({ 300, 400 }, yStr.c_str(), Play::cBlack);
-	Play::DrawDebugText({ 320, 450 }, xStr.c_str(), Play::cBlack);
 
 	if (opened[smallestID]->GetPosition() == goal)
 	{
+		
 		Play::Vector2f currentID = opened[smallestID]->GetPosition() / 20;
 		while (currentID != map1[(int)currentID.x][(int)currentID.y].GetParent())
 		{
 			map1[(int)currentID.x][(int)currentID.y].SetState(4);
 			currentID = map1[(int)currentID.x][(int)currentID.y].GetParent();
 		}
+		
 		found = true;
 	}
 	else
@@ -530,10 +532,6 @@ void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f start, 
 		// Remove currently looked at node from opened list
 		opened.at(smallestID) = opened.back();
 		opened.pop_back();
-
-
-		std::string debugStr = std::to_string(opened.size());
-		//Play::DrawDebugText({ 300, 450 }, debugStr.c_str(), Play::cBlack);
 	}
 }
 

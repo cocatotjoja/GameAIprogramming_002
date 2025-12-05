@@ -367,6 +367,10 @@ bool MainGameUpdate( float elapsedTime )
 				{
 					Play::DrawRect(nodes1[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes1[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cMagenta, true);
 				}
+				else if (nodes1[i][j].GetState() == 4)
+				{
+					Play::DrawRect(nodes1[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes1[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cGreen, true);
+				}
 				else
 				{
 					Play::DrawRect(nodes1[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes1[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cGrey, true);
@@ -398,6 +402,10 @@ bool MainGameUpdate( float elapsedTime )
 				{
 					Play::DrawRect(nodes2[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes2[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cMagenta, true);
 				}
+				else if (nodes2[i][j].GetState() == 4)
+				{
+					Play::DrawRect(nodes2[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes2[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cGreen, true);
+				}
 				else
 				{
 					Play::DrawRect(nodes2[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes2[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cGrey, true);
@@ -423,6 +431,10 @@ bool MainGameUpdate( float elapsedTime )
 				{
 					Play::DrawRect(nodes3[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes3[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cMagenta, true);
 				}
+				else if (nodes3[i][j].GetState() == 4)
+				{
+					Play::DrawRect(nodes3[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes3[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cGreen, true);
+				}
 				else
 				{
 					Play::DrawRect(nodes3[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes3[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cGrey, true);
@@ -434,9 +446,6 @@ bool MainGameUpdate( float elapsedTime )
 		break;
 	}
 
-	// Debug state update
-	std::string stateStr = std::to_string(nodeState);
-	//Play::DrawDebugText({ DISPLAY_WIDTH / 2, 500 }, stateStr.c_str(), Play::cBlack);
 
 	// Draw Start & Goal
 	//Play::DrawRect(start + Play::Vector2f{ 1,1 }, start + Play::Vector2f{ 18,18 }, Play::cGreen, true);
