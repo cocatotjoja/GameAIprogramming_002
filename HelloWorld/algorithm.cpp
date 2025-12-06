@@ -78,28 +78,27 @@ void Algorithm::AddNode(Node** map1, Play::Vector2f parentID, int parentXplus, i
 	{
 	case 1:
 		// Update Value, Parent, and state
-		map1[parentXplus][parentYplus].SetValues(parentValue + 1, goal);
+		map1[parentXplus][parentYplus].SetValues(parentValue + addValue, goal);
 		map1[parentXplus][parentYplus].SetParent(parentID);
 		map1[parentXplus][parentYplus].SetState(2);
 
 		// Add to open list
 		opened.push_back(&(map1[parentXplus][parentYplus]));
-		Play::DrawDebugText({ 300, 500 }, "node added to open", Play::cBlack);
 		break;
 	case 2:
 		// Compare and update value and parent if needed
-		if (map1[parentXplus][parentYplus].GetValueSofar() < parentValue + 1)
+		if (map1[parentXplus][parentYplus].GetValueSofar() > parentValue + addValue)
 		{
-			map1[parentXplus][parentYplus].SetValues(parentValue + 1, goal);
+			map1[parentXplus][parentYplus].SetValues(parentValue + addValue, goal);
 			map1[parentXplus][parentYplus].SetParent(parentID);
 		}
 		break;
 	case 3:
 		// If new value is smaller than existing
-		if (map1[parentXplus][parentYplus].GetValueSofar() > parentValue + 1)
+		if (map1[parentXplus][parentYplus].GetValueSofar() > parentValue + addValue)
 		{
 			// Update Value, Parent, and state
-			map1[parentXplus][parentYplus].SetValues(parentValue + 1, goal);
+			map1[parentXplus][parentYplus].SetValues(parentValue + addValue, goal);
 			map1[parentXplus][parentYplus].SetParent(parentID);
 			map1[parentXplus][parentYplus].SetState(2);
 
@@ -116,7 +115,6 @@ void Algorithm::AddNode(Node** map1, Play::Vector2f parentID, int parentXplus, i
 				}
 			}
 		}
-		Play::DrawDebugText({ 300, 500 }, "node added to open", Play::cBlack);
 		break;
 	default:
 		break;

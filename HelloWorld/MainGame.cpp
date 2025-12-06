@@ -15,7 +15,7 @@ Node** nodes1 = new Node*[16];
 Node** nodes2 = new Node*[16];
 Node** nodes3 = new Node*[26];
 
-//Create Algorithm
+//Create Algorithm object
 Algorithm pathfinder;
 
 Play::Vector2f start;
@@ -25,7 +25,6 @@ Play::Vector2f goal;
 int currentMap = 3;
 int currentAlgorithm = 1;
 
-int loops = 0;
 
 void SetupMaps(int currentMap)
 {
