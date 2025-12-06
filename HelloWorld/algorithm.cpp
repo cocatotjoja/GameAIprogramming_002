@@ -145,10 +145,10 @@ void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f start, 
 	int smallestValue = 0;
 	for (int i = 0; i < opened.size(); i++)
 	{
-		if (opened[0]->GetValueTotal() < smallestValue)
+		if (opened[i]->GetValueTotal() < smallestValue)
 		{
 			smallestID = i;
-			smallestValue = opened[0]->GetValueTotal();
+			smallestValue = opened[i]->GetValueTotal();
 		}
 	}
 
@@ -167,37 +167,28 @@ void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f start, 
 	}
 	else
 	{
+		// Save parent node ID and Value for adding nodes
 		Play::Vector2f parentID = opened[smallestID]->GetID();
 		float parentValue = opened[smallestID]->GetValueSofar();
 
 		
-
-		// Adjacent nodes
-
+		// ADD Adjacent nodes
 		//map1[(int)parentID.x + 1][(int)parentID.y];
 		AddNode(map1, parentID, (int)parentID.x + 1, (int)parentID.y, 1.0f, 0, parentValue, width, height, goal);
-
 		//map1[(int)parentID.x - 1][(int)parentID.y];
 		AddNode(map1, parentID, (int)parentID.x - 1, (int)parentID.y, 1.0f, 0, parentValue, width, height, goal);
-
 		//map1[(int)parentID.x][(int)parentID.y + 1];
 		AddNode(map1, parentID, (int)parentID.x, (int)parentID.y + 1, 1.0f, 0, parentValue, width, height, goal);
-
 		//map1[(int)parentID.x][(int)parentID.y - 1];
 		AddNode(map1, parentID, (int)parentID.x, (int)parentID.y - 1, 1.0f, 0, parentValue, width, height, goal);
 
-
-
-		// Diagonal Nodes
+		// ADD Diagonal Nodes
 		//map1[(int)parentID.x - 1][(int)parentID.y + 1];
 		AddNode(map1, parentID, (int)parentID.x - 1, (int)parentID.y + 1, 1.4f, 1, parentValue, width, height, goal);
-		
 		//map1[(int)parentID.x + 1][(int)parentID.y + 1];
 		AddNode(map1, parentID, (int)parentID.x + 1, (int)parentID.y + 1, 1.4f, 2, parentValue, width, height, goal);
-
 		//map1[(int)parentID.x - 1][(int)parentID.y - 1];
 		AddNode(map1, parentID, (int)parentID.x - 1, (int)parentID.y - 1, 1.4f, 3, parentValue, width, height, goal);
-	
 		//map1[(int)parentID.x + 1][(int)parentID.y - 1];
 		AddNode(map1, parentID, (int)parentID.x + 1, (int)parentID.y - 1, 1.4f, 4, parentValue, width, height, goal);
 		

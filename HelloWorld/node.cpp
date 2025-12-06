@@ -44,8 +44,9 @@ void Node::SetBlocked(bool block)
 
 void Node::SetValues(float parentValue, Play::Vector2f goal)
 {
+	Play::Vector2f goalID = goal / 20;
 	valueSofar = parentValue;
-	valueLeft = abs(position.x - goal.x) + abs(position.y - goal.y);
+	valueLeft = abs(ID.x - goalID.x) + abs(ID.y - goalID.y);
 	valueTotal = valueSofar + valueLeft;
 }
 

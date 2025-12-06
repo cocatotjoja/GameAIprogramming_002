@@ -27,16 +27,8 @@ int currentAlgorithm = 1;
 
 int loops = 0;
 
-
-// The entry point for a PlayBuffer program
-void MainGameEntry( PLAY_IGNORE_COMMAND_LINE )
+void SetupMaps(int currentMap)
 {
-	for (int i = 0; i < 16; i++) nodes1[i] = new Node[16];
-	for (int i = 0; i < 16; i++) nodes2[i] = new Node[16];
-	for (int i = 0; i < 26; i++) nodes3[i] = new Node[25];
-
-
-	// Setup Maps
 	switch (currentMap)
 	{
 	case 1:
@@ -91,8 +83,8 @@ void MainGameEntry( PLAY_IGNORE_COMMAND_LINE )
 		}
 
 		// Set start and goal positions
-		start = Play::Vector2D{ 1,14 } * 20;
-		goal = Play::Vector2D{ 14,1 } * 20;
+		start = Play::Vector2D{ 1,14 } *20;
+		goal = Play::Vector2D{ 14,1 } *20;
 
 		break;
 	case 2:
@@ -126,7 +118,7 @@ void MainGameEntry( PLAY_IGNORE_COMMAND_LINE )
 			}
 
 			nodes2[3][3].SetBlocked(true);
-		
+
 			for (int i = 3; i < 16; i++)
 			{
 				if (i != 7 && i != 13)
@@ -270,7 +262,7 @@ void MainGameEntry( PLAY_IGNORE_COMMAND_LINE )
 			nodes3[16][1].SetBlocked(true);
 			nodes3[16][2].SetBlocked(true);
 			nodes3[16][3].SetBlocked(true);
-		
+
 			nodes3[18][5].SetBlocked(true);
 			nodes3[18][4].SetBlocked(true);
 
@@ -279,10 +271,10 @@ void MainGameEntry( PLAY_IGNORE_COMMAND_LINE )
 
 			nodes3[20][22].SetBlocked(true);
 			nodes3[21][22].SetBlocked(true);
-		
+
 			nodes3[21][13].SetBlocked(true);
 			nodes3[22][13].SetBlocked(true);
-		
+
 			nodes3[19][14].SetBlocked(true);
 			nodes3[19][16].SetBlocked(true);
 
@@ -313,6 +305,49 @@ void MainGameEntry( PLAY_IGNORE_COMMAND_LINE )
 	default:
 		break;
 	}
+}
+
+void DrawMap(Node** nodes, int height, int width)
+{
+	// Draw array for map 1
+	for (int i = 0; i < width; i++)
+	{
+		for (int j = 0; j < height; j++)
+		{
+			if (nodes[i][j].IsBlocked())
+			{
+				Play::DrawRect(nodes[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cBlack, true);
+			}
+			else if (nodes[i][j].GetState() == 2)
+			{
+				Play::DrawRect(nodes[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cBlue, true);
+			}
+			else if (nodes[i][j].GetState() == 3)
+			{
+				Play::DrawRect(nodes[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cMagenta, true);
+			}
+			else if (nodes[i][j].GetState() == 4)
+			{
+				Play::DrawRect(nodes[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cGreen, true);
+			}
+			else
+			{
+				Play::DrawRect(nodes[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cGrey, true);
+			}
+		}
+	}
+}
+
+
+// The entry point for a PlayBuffer program
+void MainGameEntry( PLAY_IGNORE_COMMAND_LINE )
+{
+	for (int i = 0; i < 16; i++) nodes1[i] = new Node[16];
+	for (int i = 0; i < 16; i++) nodes2[i] = new Node[16];
+	for (int i = 0; i < 26; i++) nodes3[i] = new Node[25];
+
+
+	SetupMaps(currentMap);
 
 
 	Play::CreateManager( DISPLAY_WIDTH, DISPLAY_HEIGHT, DISPLAY_SCALE );
@@ -342,107 +377,20 @@ bool MainGameUpdate( float elapsedTime )
 		break;
 	}
 
-
-	
-	// Debug state update
-	int nodeState = 0;
-
-
 	// Draw map
 	switch (currentMap)
 	{
 	case 1:
 		// Draw array for map 1
-		for (int i = 0; i < 16; i++)
-		{
-			for (int j = 0; j < 16; j++)
-			{
-				if (nodes1[i][j].IsBlocked())
-				{
-					Play::DrawRect(nodes1[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes1[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cBlack, true);
-				}
-				else if (nodes1[i][j].GetState() == 2)
-				{
-					Play::DrawRect(nodes1[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes1[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cBlue, true);
-				}
-				else if (nodes1[i][j].GetState() == 3)
-				{
-					Play::DrawRect(nodes1[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes1[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cMagenta, true);
-				}
-				else if (nodes1[i][j].GetState() == 4)
-				{
-					Play::DrawRect(nodes1[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes1[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cGreen, true);
-				}
-				else
-				{
-					Play::DrawRect(nodes1[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes1[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cGrey, true);
-				}
-
-				// Debug state update
-				if (nodes1[i][j].GetState() == 2)
-				{
-					nodeState++;
-				}
-			}
-		}
+		DrawMap(nodes1, 16, 16);
 		break;
 	case 2:
 		// Draw array for map 2
-		for (int i = 0; i < 16; i++)
-		{
-			for (int j = 0; j < 16; j++)
-			{
-				if (nodes2[i][j].IsBlocked())
-				{
-					Play::DrawRect(nodes2[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes2[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cBlack, true);
-				}
-				else if (nodes2[i][j].GetState() == 2)
-				{
-					Play::DrawRect(nodes2[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes2[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cBlue, true);
-				}
-				else if (nodes2[i][j].GetState() == 3)
-				{
-					Play::DrawRect(nodes2[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes2[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cMagenta, true);
-				}
-				else if (nodes2[i][j].GetState() == 4)
-				{
-					Play::DrawRect(nodes2[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes2[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cGreen, true);
-				}
-				else
-				{
-					Play::DrawRect(nodes2[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes2[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cGrey, true);
-				}
-			}
-		}
+		DrawMap(nodes2, 16, 16);
 		break;
 	case 3:
 		// Draw array for map 3
-		for (int i = 0; i < 26; i++)
-		{
-			for (int j = 0; j < 25; j++)
-			{
-				if (nodes3[i][j].IsBlocked())
-				{
-					Play::DrawRect(nodes3[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes3[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cBlack, true);
-				}
-				else if (nodes3[i][j].GetState() == 2)
-				{
-					Play::DrawRect(nodes3[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes3[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cBlue, true);
-				}
-				else if (nodes3[i][j].GetState() == 3)
-				{
-					Play::DrawRect(nodes3[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes3[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cMagenta, true);
-				}
-				else if (nodes3[i][j].GetState() == 4)
-				{
-					Play::DrawRect(nodes3[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes3[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cGreen, true);
-				}
-				else
-				{
-					Play::DrawRect(nodes3[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes3[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cGrey, true);
-				}
-			}
-		}
+		DrawMap(nodes3, 26, 25);
 		break;
 	default:
 		break;
@@ -450,8 +398,8 @@ bool MainGameUpdate( float elapsedTime )
 
 
 	// Draw Start & Goal
-	//Play::DrawRect(start + Play::Vector2f{ 1,1 }, start + Play::Vector2f{ 18,18 }, Play::cGreen, true);
-	//Play::DrawRect(goal + Play::Vector2f{ 1,1 }, goal + Play::Vector2f{ 18,18 }, Play::cRed, true);
+	Play::DrawRect(start + Play::Vector2f{ 1,1 }, start + Play::Vector2f{ 18,18 }, Play::cGreen, true);
+	Play::DrawRect(goal + Play::Vector2f{ 1,1 }, goal + Play::Vector2f{ 18,18 }, Play::cRed, true);
 
 	Play::PresentDrawingBuffer();
 	return Play::KeyDown( KEY_ESCAPE );
@@ -465,6 +413,9 @@ int MainGameExit( void )
 }
 
 
+
+
+//Fredriks Alternative for setting up the maps
 /*
 	int width = map1width;
 	int height = map1height;
