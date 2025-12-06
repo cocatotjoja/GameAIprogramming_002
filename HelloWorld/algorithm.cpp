@@ -140,7 +140,7 @@ void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f start, 
 	}
 	// Loop through opened nodes and find the smallest one
 	int smallestID = 0;
-	int smallestValue = 0;
+	int smallestValue = opened[0]->GetValueTotal();
 	for (int i = 0; i < opened.size(); i++)
 	{
 		if (opened[i]->GetValueTotal() < smallestValue)
