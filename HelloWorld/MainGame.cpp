@@ -22,7 +22,8 @@ Play::Vector2f start;
 Play::Vector2f goal;
 
 
-int currentMap = 3;
+int currentMap = 1;
+// A* = 1 : BFS = 2 : DFS = 3 : Dijkstra = 4
 int currentAlgorithm = 1;
 
 
@@ -348,7 +349,6 @@ void MainGameEntry( PLAY_IGNORE_COMMAND_LINE )
 
 	SetupMaps(currentMap);
 
-
 	Play::CreateManager( DISPLAY_WIDTH, DISPLAY_HEIGHT, DISPLAY_SCALE );
 }
 
@@ -362,15 +362,63 @@ bool MainGameUpdate( float elapsedTime )
 	{
 	case 1:
 		// Update nodes1
-		pathfinder.aStar((Node**)nodes1, 16, 16, start, goal);
+		switch (currentAlgorithm)
+		{
+		case 1:
+			pathfinder.aStar((Node**)nodes1, 16, 16, start, goal);
+			break;
+		case 2:
+			pathfinder.Breadth((Node**)nodes1, 16, 16, start, goal);
+			break;
+		case 3:
+			pathfinder.Depth((Node**)nodes1, 16, 16, start, goal);
+			break;
+		case 4:
+			pathfinder.Dijkstra((Node**)nodes1, 16, 16, start, goal);
+			break;
+		default:
+			break;
+		}
 		break;
 	case 2:
 		// Update nodes2
-		pathfinder.aStar((Node**)nodes2, 16, 16, start, goal);
+		switch (currentAlgorithm)
+		{
+		case 1:
+			pathfinder.aStar((Node**)nodes2, 16, 16, start, goal);
+			break;
+		case 2:
+			pathfinder.Breadth((Node**)nodes2, 16, 16, start, goal);
+			break;
+		case 3:
+			pathfinder.Depth((Node**)nodes2, 16, 16, start, goal);
+			break;
+		case 4:
+			pathfinder.Dijkstra((Node**)nodes2, 16, 16, start, goal);
+			break;
+		default:
+			break;
+		}
 		break;
 	case 3:
 		// Update nodes3
-		pathfinder.aStar((Node**)nodes3, 26, 25, start, goal);
+		switch (currentAlgorithm)
+		{
+		case 1:
+			pathfinder.aStar((Node**)nodes3, 26, 25, start, goal);
+			break;
+		case 2:
+			pathfinder.Breadth((Node**)nodes3, 26, 25, start, goal);
+			break;
+		case 3:
+			pathfinder.Depth((Node**)nodes3, 26, 25, start, goal);
+			break;
+		case 4:
+			pathfinder.Dijkstra((Node**)nodes3, 26, 25, start, goal);
+			break;
+		default:
+			break;
+		}
 		break;
 	default:
 		break;

@@ -43,10 +43,6 @@ int Algorithm::ShouldAdd(Node** map1, int x, int y, int corner, int width, int h
 		default:
 			break;
 		}
-
-		std::string stateStr;
-		stateStr = std::to_string(map1[x][y].GetState());
-		//Play::DrawDebugText({ 320, 500 }, stateStr.c_str(), Play::cBlack);
 		
 		// Check state, Unchecked = 1, Opened = 2, Closed = 3
 		switch (map1[x][y].GetState())
@@ -121,23 +117,25 @@ void Algorithm::AddNode(Node** map1, Play::Vector2f parentID, int parentXplus, i
 	}
 }
 
+
 void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f start, Play::Vector2f goal)
 {
 	if (found)
 	{
 		return;
 	}
-	//Check if opened is empty, if so add the start node
+
 	if (opened.empty())
 	{
 		int x = start.x / 20;
 		int y = start.y / 20;
-		opened.push_back(&(map1[1][height-2]));
+		opened.push_back(&(map1[1][height - 2]));
 		map1[x][y].SetValues(0, goal);
 		map1[x][y].SetState(2);
 		map1[x][y].SetParent(map1[x][y].GetID());
-
 	}
+
+
 	// Loop through opened nodes and find the smallest one
 	int smallestID = 0;
 	int smallestValue = opened[0]->GetValueTotal();
@@ -202,19 +200,231 @@ void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f start, 
 	}
 }
 
-void Algorithm::Breadth(Node** map1, int width, int height, Play::Vector2f goal)
+void Algorithm::Breadth(Node** map1, int width, int height, Play::Vector2f start, Play::Vector2f goal)
 {
+	if (addStart)
+	{
+		int x = start.x / 20;
+		int y = start.y / 20;
+		openedBFS.push(&(map1[1][height - 2]));
+		map1[x][y].SetValues(0, goal);
+		map1[x][y].SetState(2);
+		map1[x][y].SetParent(map1[x][y].GetID());
+		addStart = false;
+	}
+
+
+	if (!openedBFS.empty())
+	{
+		// Save parent node ID and Value for adding nodes
+		Play::Vector2f parentID = openedBFS.front()->GetID();
+		float parentValue = openedBFS.front()->GetValueSofar();
+
+
+		// ADD Adjacent nodes
+		//map1[(int)parentID.x + 1][(int)parentID.y];
+		if (ShouldAdd(map1, (int)parentID.x + 1, (int)parentID.y, 0, width, height) == 1)
+		{
+			int parentXplus = (int)parentID.x + 1;
+			int parentYplus = (int)parentID.y;
+			map1[parentXplus][parentYplus].SetValues(parentValue + 1.0f, goal);
+			map1[parentXplus][parentYplus].SetParent(parentID);
+			map1[parentXplus][parentYplus].SetState(2);
+
+			// Add to open list
+			openedBFS.push(&(map1[parentXplus][parentYplus]));
+		}
+		//map1[(int)parentID.x - 1][(int)parentID.y];
+		if (ShouldAdd(map1, (int)parentID.x - 1, (int)parentID.y, 0, width, height) == 1)
+		{
+			int parentXplus = (int)parentID.x - 1;
+			int parentYplus = (int)parentID.y;
+			map1[parentXplus][parentYplus].SetValues(parentValue + 1.0f, goal);
+			map1[parentXplus][parentYplus].SetParent(parentID);
+			map1[parentXplus][parentYplus].SetState(2);
+
+			// Add to open list
+			openedBFS.push(&(map1[parentXplus][parentYplus]));
+		}
+		//map1[(int)parentID.x][(int)parentID.y + 1];
+		if (ShouldAdd(map1, (int)parentID.x, (int)parentID.y + 1, 0, width, height) == 1)
+		{
+			int parentXplus = (int)parentID.x;
+			int parentYplus = (int)parentID.y + 1;
+			map1[parentXplus][parentYplus].SetValues(parentValue + 1.0f, goal);
+			map1[parentXplus][parentYplus].SetParent(parentID);
+			map1[parentXplus][parentYplus].SetState(2);
+
+			// Add to open list
+			openedBFS.push(&(map1[parentXplus][parentYplus]));
+		}
+		//map1[(int)parentID.x][(int)parentID.y - 1];
+		if (ShouldAdd(map1, (int)parentID.x, (int)parentID.y - 1, 0, width, height) == 1)
+		{
+			int parentXplus = (int)parentID.x;
+			int parentYplus = (int)parentID.y - 1;
+			map1[parentXplus][parentYplus].SetValues(parentValue + 1.0f, goal);
+			map1[parentXplus][parentYplus].SetParent(parentID);
+			map1[parentXplus][parentYplus].SetState(2);
+
+			// Add to open list
+			openedBFS.push(&(map1[parentXplus][parentYplus]));
+		}
+
+		// ADD Diagonal Nodes
+		//map1[(int)parentID.x - 1][(int)parentID.y + 1];
+		if (ShouldAdd(map1, (int)parentID.x - 1, (int)parentID.y + 1, 0, width, height) == 1)
+		{
+			int parentXplus = (int)parentID.x - 1;
+			int parentYplus = (int)parentID.y + 1;
+			map1[parentXplus][parentYplus].SetValues(parentValue + 1.4f, goal);
+			map1[parentXplus][parentYplus].SetParent(parentID);
+			map1[parentXplus][parentYplus].SetState(2);
+
+			// Add to open list
+			openedBFS.push(&(map1[parentXplus][parentYplus]));
+		}
+		//map1[(int)parentID.x + 1][(int)parentID.y + 1];
+		if (ShouldAdd(map1, (int)parentID.x + 1, (int)parentID.y + 1, 0, width, height) == 1)
+		{
+			int parentXplus = (int)parentID.x + 1;
+			int parentYplus = (int)parentID.y + 1;
+			map1[parentXplus][parentYplus].SetValues(parentValue + 1.4f, goal);
+			map1[parentXplus][parentYplus].SetParent(parentID);
+			map1[parentXplus][parentYplus].SetState(2);
+
+			// Add to open list
+			openedBFS.push(&(map1[parentXplus][parentYplus]));
+		}
+		//map1[(int)parentID.x - 1][(int)parentID.y - 1];
+		if (ShouldAdd(map1, (int)parentID.x - 1, (int)parentID.y - 1, 0, width, height) == 1)
+		{
+			int parentXplus = (int)parentID.x - 1;
+			int parentYplus = (int)parentID.y - 1;
+			map1[parentXplus][parentYplus].SetValues(parentValue + 1.4f, goal);
+			map1[parentXplus][parentYplus].SetParent(parentID);
+			map1[parentXplus][parentYplus].SetState(2);
+
+			// Add to open list
+			openedBFS.push(&(map1[parentXplus][parentYplus]));
+		}
+		//map1[(int)parentID.x + 1][(int)parentID.y - 1];
+		if (ShouldAdd(map1, (int)parentID.x + 1, (int)parentID.y - 1, 0, width, height) == 1)
+		{
+			int parentXplus = (int)parentID.x + 1;
+			int parentYplus = (int)parentID.y - 1;
+			map1[parentXplus][parentYplus].SetValues(parentValue + 1.4f, goal);
+			map1[parentXplus][parentYplus].SetParent(parentID);
+			map1[parentXplus][parentYplus].SetState(2);
+
+			// Add to open list
+			openedBFS.push(&(map1[parentXplus][parentYplus]));
+		}
+
+
+		// Add currently looked at node to closed list and update its state
+		map1[(int)parentID.x][(int)parentID.y].SetState(3);
+		closedBFS.push(&(map1[(int)parentID.x][(int)parentID.y]));
+
+		// Remove currently looked at node from opened list
+		openedBFS.pop();
+	}
+	else
+	{
+		Play::Vector2f currentID = goal / 20;
+		while (currentID != map1[(int)currentID.x][(int)currentID.y].GetParent())
+		{
+			map1[(int)currentID.x][(int)currentID.y].SetState(4);
+			currentID = map1[(int)currentID.x][(int)currentID.y].GetParent();
+		}
+
+		found = true;
+	}
 }
 
-void Algorithm::Depth(Node** map1, int width, int height, Play::Vector2f goal)
+void Algorithm::Depth(Node** map1, int width, int height, Play::Vector2f start, Play::Vector2f goal)
 {
+	// TO BE ADDED
+}
 
-	for (int y = 0; y < height; y++)
+void Algorithm::Dijkstra(Node** map1, int width, int height, Play::Vector2f start, Play::Vector2f goal)
+{
+	if (found)
 	{
-		for (int x = 0; x < width; x++)
+		return;
+	}
+
+	if (opened.empty())
+	{
+		int x = start.x / 20;
+		int y = start.y / 20;
+		opened.push_back(&(map1[1][height - 2]));
+		map1[x][y].SetValues(0, goal);
+		map1[x][y].SetState(2);
+		map1[x][y].SetParent(map1[x][y].GetID());
+	}
+
+
+	// Loop through opened nodes and find the smallest one
+	int smallestID = 0;
+	int smallestValue = opened[0]->GetValueSofar();
+	for (int i = 0; i < opened.size(); i++)
+	{
+		if (opened[i]->GetValueSofar() < smallestValue)
 		{
-			opened.push_back(&(map1[x][y]));
+			smallestID = i;
+			smallestValue = opened[i]->GetValueSofar();
 		}
 	}
 
+
+	if (opened[smallestID]->GetPosition() == goal)
+	{
+
+		Play::Vector2f currentID = opened[smallestID]->GetPosition() / 20;
+		while (currentID != map1[(int)currentID.x][(int)currentID.y].GetParent())
+		{
+			map1[(int)currentID.x][(int)currentID.y].SetState(4);
+			currentID = map1[(int)currentID.x][(int)currentID.y].GetParent();
+		}
+
+		found = true;
+	}
+	else
+	{
+		// Save parent node ID and Value for adding nodes
+		Play::Vector2f parentID = opened[smallestID]->GetID();
+		float parentValue = opened[smallestID]->GetValueSofar();
+
+
+		// ADD Adjacent nodes
+		//map1[(int)parentID.x + 1][(int)parentID.y];
+		AddNode(map1, parentID, (int)parentID.x + 1, (int)parentID.y, 1.0f, 0, parentValue, width, height, goal);
+		//map1[(int)parentID.x - 1][(int)parentID.y];
+		AddNode(map1, parentID, (int)parentID.x - 1, (int)parentID.y, 1.0f, 0, parentValue, width, height, goal);
+		//map1[(int)parentID.x][(int)parentID.y + 1];
+		AddNode(map1, parentID, (int)parentID.x, (int)parentID.y + 1, 1.0f, 0, parentValue, width, height, goal);
+		//map1[(int)parentID.x][(int)parentID.y - 1];
+		AddNode(map1, parentID, (int)parentID.x, (int)parentID.y - 1, 1.0f, 0, parentValue, width, height, goal);
+
+		// ADD Diagonal Nodes
+		//map1[(int)parentID.x - 1][(int)parentID.y + 1];
+		AddNode(map1, parentID, (int)parentID.x - 1, (int)parentID.y + 1, 1.4f, 1, parentValue, width, height, goal);
+		//map1[(int)parentID.x + 1][(int)parentID.y + 1];
+		AddNode(map1, parentID, (int)parentID.x + 1, (int)parentID.y + 1, 1.4f, 2, parentValue, width, height, goal);
+		//map1[(int)parentID.x - 1][(int)parentID.y - 1];
+		AddNode(map1, parentID, (int)parentID.x - 1, (int)parentID.y - 1, 1.4f, 3, parentValue, width, height, goal);
+		//map1[(int)parentID.x + 1][(int)parentID.y - 1];
+		AddNode(map1, parentID, (int)parentID.x + 1, (int)parentID.y - 1, 1.4f, 4, parentValue, width, height, goal);
+
+
+		// Add currently looked at node to closed list and update its state
+		//opened[smallestID]->SetState(3);
+		map1[(int)parentID.x][(int)parentID.y].SetState(3);
+		closed.push_back(&(map1[(int)parentID.x][(int)parentID.y]));
+
+		// Remove currently looked at node from opened list
+		opened.at(smallestID) = opened.back();
+		opened.pop_back();
+	}
 }
