@@ -437,7 +437,7 @@ bool MainGameUpdate( float elapsedTime )
 		break;
 	case 3:
 		// Draw array for map 3
-		DrawMap(nodes3, 26, 25);
+		DrawMap(nodes3, 25, 26);
 		break;
 	default:
 		break;

@@ -1,4 +1,8 @@
 #include "algorithm.h"
+#include <chrono>
+using std::chrono::duration_cast;
+using std::chrono::milliseconds;
+using std::chrono::system_clock;
 
 
 //Return 0, if shouldn'd add, returns 1 if unchecked, returns 2 if opened, returns 3 if closed
@@ -133,6 +137,7 @@ void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f start, 
 		map1[x][y].SetValues(0, goal);
 		map1[x][y].SetState(2);
 		map1[x][y].SetParent(map1[x][y].GetID());
+
 	}
 
 
@@ -362,6 +367,9 @@ void Algorithm::Depth(Node** map1, int width, int height, Play::Vector2f start, 
 		Play::Vector2f parentID = openedDFS.top()->GetID();
 		float parentValue = openedDFS.top()->GetValueSofar();
 
+		// Remove currently looked at node from opened list
+		openedDFS.pop();
+
 
 		// ADD Adjacent nodes
 		//map1[(int)parentID.x + 1][(int)parentID.y];
@@ -467,9 +475,6 @@ void Algorithm::Depth(Node** map1, int width, int height, Play::Vector2f start, 
 		// Add currently looked at node to closed list and update its state
 		map1[(int)parentID.x][(int)parentID.y].SetState(3);
 		closedDFS.push(&(map1[(int)parentID.x][(int)parentID.y]));
-
-		// Remove currently looked at node from opened list
-		openedDFS.pop();
 	}
 	else
 	{
