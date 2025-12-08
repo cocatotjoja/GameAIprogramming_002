@@ -348,7 +348,7 @@ void Algorithm::Depth(Node** map1, int width, int height, Play::Vector2f start, 
 	{
 		int x = start.x / 20;
 		int y = start.y / 20;
-		openedDFS.push(&(map1[1][height - 2]));
+		openedDFS.push(&(map1[x][y]));
 		map1[x][y].SetValues(0, goal);
 		map1[x][y].SetState(2);
 		map1[x][y].SetParent(map1[x][y].GetID());
