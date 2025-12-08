@@ -22,9 +22,9 @@ Play::Vector2f start;
 Play::Vector2f goal;
 
 
-int currentMap = 1;
+int currentMap = 3;
 // A* = 1 : BFS = 2 : DFS = 3 : Dijkstra = 4
-int currentAlgorithm = 1;
+int currentAlgorithm = 3;
 
 
 void SetupMaps(int currentMap)

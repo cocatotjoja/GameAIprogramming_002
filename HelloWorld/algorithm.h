@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <queue>
+#include <stack>
 #include "node.h"
 
 class Algorithm
@@ -11,6 +12,10 @@ private:
 
 	std::queue<Node*> openedBFS;
 	std::queue<Node*> closedBFS;
+
+	std::stack<Node*> openedDFS;
+	std::stack<Node*> closedDFS;
+
 	bool found = false;
 	bool addStart = true;
 

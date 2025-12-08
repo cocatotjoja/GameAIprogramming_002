@@ -48,7 +48,7 @@ int Algorithm::ShouldAdd(Node** map1, int x, int y, int corner, int width, int h
 		switch (map1[x][y].GetState())
 		{
 		case 1:
-			//Play::DrawDebugText({ 300, 500 }, "Add", Play::cBlack);
+			Play::DrawDebugText({ 300, 500 }, "Add", Play::cBlack);
 			return 1;
 			break;
 		case 2:
@@ -344,7 +344,144 @@ void Algorithm::Breadth(Node** map1, int width, int height, Play::Vector2f start
 
 void Algorithm::Depth(Node** map1, int width, int height, Play::Vector2f start, Play::Vector2f goal)
 {
-	// TO BE ADDED
+	if (addStart)
+	{
+		int x = start.x / 20;
+		int y = start.y / 20;
+		openedDFS.push(&(map1[1][height - 2]));
+		map1[x][y].SetValues(0, goal);
+		map1[x][y].SetState(2);
+		map1[x][y].SetParent(map1[x][y].GetID());
+		addStart = false;
+	}
+
+
+	if (!openedDFS.empty())
+	{
+		// Save parent node ID and Value for adding nodes
+		Play::Vector2f parentID = openedDFS.top()->GetID();
+		float parentValue = openedDFS.top()->GetValueSofar();
+
+
+		// ADD Adjacent nodes
+		//map1[(int)parentID.x + 1][(int)parentID.y];
+		if (ShouldAdd(map1, (int)parentID.x + 1, (int)parentID.y, 0, width, height) == 1)
+		{
+			int parentXplus = (int)parentID.x + 1;
+			int parentYplus = (int)parentID.y;
+			map1[parentXplus][parentYplus].SetValues(parentValue + 1.0f, goal);
+			map1[parentXplus][parentYplus].SetParent(parentID);
+			map1[parentXplus][parentYplus].SetState(2);
+
+			// Add to open list
+			openedDFS.push(&(map1[parentXplus][parentYplus]));
+		}
+		//map1[(int)parentID.x - 1][(int)parentID.y];
+		if (ShouldAdd(map1, (int)parentID.x - 1, (int)parentID.y, 0, width, height) == 1)
+		{
+			int parentXplus = (int)parentID.x - 1;
+			int parentYplus = (int)parentID.y;
+			map1[parentXplus][parentYplus].SetValues(parentValue + 1.0f, goal);
+			map1[parentXplus][parentYplus].SetParent(parentID);
+			map1[parentXplus][parentYplus].SetState(2);
+
+			// Add to open list
+			openedDFS.push(&(map1[parentXplus][parentYplus]));
+		}
+		//map1[(int)parentID.x][(int)parentID.y + 1];
+		if (ShouldAdd(map1, (int)parentID.x, (int)parentID.y + 1, 0, width, height) == 1)
+		{
+			int parentXplus = (int)parentID.x;
+			int parentYplus = (int)parentID.y + 1;
+			map1[parentXplus][parentYplus].SetValues(parentValue + 1.0f, goal);
+			map1[parentXplus][parentYplus].SetParent(parentID);
+			map1[parentXplus][parentYplus].SetState(2);
+
+			// Add to open list
+			openedDFS.push(&(map1[parentXplus][parentYplus]));
+		}
+		//map1[(int)parentID.x][(int)parentID.y - 1];
+		if (ShouldAdd(map1, (int)parentID.x, (int)parentID.y - 1, 0, width, height) == 1)
+		{
+			int parentXplus = (int)parentID.x;
+			int parentYplus = (int)parentID.y - 1;
+			map1[parentXplus][parentYplus].SetValues(parentValue + 1.0f, goal);
+			map1[parentXplus][parentYplus].SetParent(parentID);
+			map1[parentXplus][parentYplus].SetState(2);
+
+			// Add to open list
+			openedDFS.push(&(map1[parentXplus][parentYplus]));
+		}
+
+		// ADD Diagonal Nodes
+		//map1[(int)parentID.x - 1][(int)parentID.y + 1];
+		if (ShouldAdd(map1, (int)parentID.x - 1, (int)parentID.y + 1, 0, width, height) == 1)
+		{
+			int parentXplus = (int)parentID.x - 1;
+			int parentYplus = (int)parentID.y + 1;
+			map1[parentXplus][parentYplus].SetValues(parentValue + 1.4f, goal);
+			map1[parentXplus][parentYplus].SetParent(parentID);
+			map1[parentXplus][parentYplus].SetState(2);
+
+			// Add to open list
+			openedDFS.push(&(map1[parentXplus][parentYplus]));
+		}
+		//map1[(int)parentID.x + 1][(int)parentID.y + 1];
+		if (ShouldAdd(map1, (int)parentID.x + 1, (int)parentID.y + 1, 0, width, height) == 1)
+		{
+			int parentXplus = (int)parentID.x + 1;
+			int parentYplus = (int)parentID.y + 1;
+			map1[parentXplus][parentYplus].SetValues(parentValue + 1.4f, goal);
+			map1[parentXplus][parentYplus].SetParent(parentID);
+			map1[parentXplus][parentYplus].SetState(2);
+
+			// Add to open list
+			openedDFS.push(&(map1[parentXplus][parentYplus]));
+		}
+		//map1[(int)parentID.x - 1][(int)parentID.y - 1];
+		if (ShouldAdd(map1, (int)parentID.x - 1, (int)parentID.y - 1, 0, width, height) == 1)
+		{
+			int parentXplus = (int)parentID.x - 1;
+			int parentYplus = (int)parentID.y - 1;
+			map1[parentXplus][parentYplus].SetValues(parentValue + 1.4f, goal);
+			map1[parentXplus][parentYplus].SetParent(parentID);
+			map1[parentXplus][parentYplus].SetState(2);
+
+			// Add to open list
+			openedDFS.push(&(map1[parentXplus][parentYplus]));
+		}
+		//map1[(int)parentID.x + 1][(int)parentID.y - 1];
+		if (ShouldAdd(map1, (int)parentID.x + 1, (int)parentID.y - 1, 0, width, height) == 1)
+		{
+			int parentXplus = (int)parentID.x + 1;
+			int parentYplus = (int)parentID.y - 1;
+			map1[parentXplus][parentYplus].SetValues(parentValue + 1.4f, goal);
+			map1[parentXplus][parentYplus].SetParent(parentID);
+			map1[parentXplus][parentYplus].SetState(2);
+
+			// Add to open list
+			openedDFS.push(&(map1[parentXplus][parentYplus]));
+		}
+
+
+		// Add currently looked at node to closed list and update its state
+		map1[(int)parentID.x][(int)parentID.y].SetState(3);
+		closedDFS.push(&(map1[(int)parentID.x][(int)parentID.y]));
+
+		// Remove currently looked at node from opened list
+		openedDFS.pop();
+	}
+	else
+	{
+		Play::Vector2f currentID = goal / 20;
+		while (currentID != map1[(int)currentID.x][(int)currentID.y].GetParent())
+		{
+			map1[(int)currentID.x][(int)currentID.y].SetState(4);
+			currentID = map1[(int)currentID.x][(int)currentID.y].GetParent();
+		}
+
+		found = true;
+	}
 }
 
 void Algorithm::Dijkstra(Node** map1, int width, int height, Play::Vector2f start, Play::Vector2f goal)
