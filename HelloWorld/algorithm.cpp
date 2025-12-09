@@ -122,7 +122,7 @@ void Algorithm::AddNode(Node** map1, Play::Vector2f parentID, int parentXplus, i
 }
 
 
-void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f start, Play::Vector2f goal)
+void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f start, Play::Vector2f goal, int* runtime)
 {
 	if (found)
 	{
@@ -205,7 +205,7 @@ void Algorithm::aStar(Node** map1, int width, int height, Play::Vector2f start, 
 	}
 }
 
-void Algorithm::Breadth(Node** map1, int width, int height, Play::Vector2f start, Play::Vector2f goal)
+void Algorithm::Breadth(Node** map1, int width, int height, Play::Vector2f start, Play::Vector2f goal, int* runtime)
 {
 	if (addStart)
 	{
@@ -347,7 +347,7 @@ void Algorithm::Breadth(Node** map1, int width, int height, Play::Vector2f start
 	}
 }
 
-void Algorithm::Depth(Node** map1, int width, int height, Play::Vector2f start, Play::Vector2f goal)
+void Algorithm::Depth(Node** map1, int width, int height, Play::Vector2f start, Play::Vector2f goal, int* runtime)
 {
 	if (addStart)
 	{
@@ -489,7 +489,7 @@ void Algorithm::Depth(Node** map1, int width, int height, Play::Vector2f start, 
 	}
 }
 
-void Algorithm::Dijkstra(Node** map1, int width, int height, Play::Vector2f start, Play::Vector2f goal)
+void Algorithm::Dijkstra(Node** map1, int width, int height, Play::Vector2f start, Play::Vector2f goal, int* runtime)
 {
 	if (found)
 	{

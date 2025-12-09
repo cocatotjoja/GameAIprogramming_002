@@ -10,6 +10,8 @@ int DISPLAY_WIDTH = 600;
 int DISPLAY_HEIGHT = 600;
 int DISPLAY_SCALE = 2;
 
+int runtime = 0;
+
 // Create Node arrays
 Node** nodes1 = new Node*[16];
 Node** nodes2 = new Node*[16];
@@ -365,16 +367,16 @@ bool MainGameUpdate( float elapsedTime )
 		switch (currentAlgorithm)
 		{
 		case 1:
-			pathfinder.aStar((Node**)nodes1, 16, 16, start, goal);
+			pathfinder.aStar((Node**)nodes1, 16, 16, start, goal, &runtime);
 			break;
 		case 2:
-			pathfinder.Breadth((Node**)nodes1, 16, 16, start, goal);
+			pathfinder.Breadth((Node**)nodes1, 16, 16, start, goal, &runtime);
 			break;
 		case 3:
-			pathfinder.Depth((Node**)nodes1, 16, 16, start, goal);
+			pathfinder.Depth((Node**)nodes1, 16, 16, start, goal, &runtime);
 			break;
 		case 4:
-			pathfinder.Dijkstra((Node**)nodes1, 16, 16, start, goal);
+			pathfinder.Dijkstra((Node**)nodes1, 16, 16, start, goal, &runtime);
 			break;
 		default:
 			break;
@@ -385,16 +387,16 @@ bool MainGameUpdate( float elapsedTime )
 		switch (currentAlgorithm)
 		{
 		case 1:
-			pathfinder.aStar((Node**)nodes2, 16, 16, start, goal);
+			pathfinder.aStar((Node**)nodes2, 16, 16, start, goal, &runtime);
 			break;
 		case 2:
-			pathfinder.Breadth((Node**)nodes2, 16, 16, start, goal);
+			pathfinder.Breadth((Node**)nodes2, 16, 16, start, goal, &runtime);
 			break;
 		case 3:
-			pathfinder.Depth((Node**)nodes2, 16, 16, start, goal);
+			pathfinder.Depth((Node**)nodes2, 16, 16, start, goal, &runtime);
 			break;
 		case 4:
-			pathfinder.Dijkstra((Node**)nodes2, 16, 16, start, goal);
+			pathfinder.Dijkstra((Node**)nodes2, 16, 16, start, goal, &runtime);
 			break;
 		default:
 			break;
@@ -405,16 +407,16 @@ bool MainGameUpdate( float elapsedTime )
 		switch (currentAlgorithm)
 		{
 		case 1:
-			pathfinder.aStar((Node**)nodes3, 26, 25, start, goal);
+			pathfinder.aStar((Node**)nodes3, 26, 25, start, goal, &runtime);
 			break;
 		case 2:
-			pathfinder.Breadth((Node**)nodes3, 26, 25, start, goal);
+			pathfinder.Breadth((Node**)nodes3, 26, 25, start, goal, &runtime);
 			break;
 		case 3:
-			pathfinder.Depth((Node**)nodes3, 26, 25, start, goal);
+			pathfinder.Depth((Node**)nodes3, 26, 25, start, goal, &runtime);
 			break;
 		case 4:
-			pathfinder.Dijkstra((Node**)nodes3, 26, 25, start, goal);
+			pathfinder.Dijkstra((Node**)nodes3, 26, 25, start, goal, &runtime);
 			break;
 		default:
 			break;
