@@ -10,7 +10,7 @@ int DISPLAY_WIDTH = 600;
 int DISPLAY_HEIGHT = 600;
 int DISPLAY_SCALE = 2;
 
-int runtime = 0;
+long long runtime = 0;
 
 // Create Node arrays
 Node** nodes1 = new Node*[16];
@@ -26,7 +26,7 @@ Play::Vector2f goal;
 
 int currentMap = 3;
 // A* = 1 : BFS = 2 : DFS = 3 : Dijkstra = 4
-int currentAlgorithm = 3;
+int currentAlgorithm = 4;
 
 
 void SetupMaps(int currentMap)
@@ -449,6 +449,8 @@ bool MainGameUpdate( float elapsedTime )
 	// Draw Start & Goal
 	Play::DrawRect(start + Play::Vector2f{ 1,1 }, start + Play::Vector2f{ 18,18 }, Play::cGreen, true);
 	Play::DrawRect(goal + Play::Vector2f{ 1,1 }, goal + Play::Vector2f{ 18,18 }, Play::cRed, true);
+	string timeStr = std::to_string(runtime);
+	Play::DrawDebugText({ 300, 550 }, timeStr.c_str(), Play::cBlack);
 
 	Play::PresentDrawingBuffer();
 	return Play::KeyDown( KEY_ESCAPE );
@@ -464,7 +466,7 @@ int MainGameExit( void )
 
 
 
-//Fredriks Alternative for setting up the maps
+//Fredriks Alternative for setting up the maps SAVED FOR FUTURE IMPROVEMENTS
 /*
 	int width = map1width;
 	int height = map1height;
