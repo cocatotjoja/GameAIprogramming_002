@@ -24,11 +24,18 @@ Play::Vector2f start;
 Play::Vector2f goal;
 
 
-int currentMap = 3;
+
+// Change the variables below to test the differen maps and algorithms
+// Check comment above the variable to know what alternatives are available
+
+// Map1 = 1 : Map2 = 2 : Map3 = 3
+int currentMap = 1;
 // A* = 1 : BFS = 2 : DFS = 3 : Dijkstra = 4
-int currentAlgorithm = 4;
+int currentAlgorithm = 3;
 
 
+
+// Set the blocked nodes for each of the maps
 void SetupMaps(int currentMap)
 {
 	switch (currentMap)
@@ -309,6 +316,7 @@ void SetupMaps(int currentMap)
 	}
 }
 
+// Draws the given map
 void DrawMap(Node** nodes, int height, int width)
 {
 	// Draw array for map 1
@@ -340,6 +348,8 @@ void DrawMap(Node** nodes, int height, int width)
 	}
 }
 
+
+// Here starts the code for running the tests
 
 // The entry point for a PlayBuffer program
 void MainGameEntry( PLAY_IGNORE_COMMAND_LINE )
