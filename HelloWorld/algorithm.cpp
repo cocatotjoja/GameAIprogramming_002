@@ -291,7 +291,7 @@ void Algorithm::Breadth(Node** map1, int width, int height, Play::Vector2f start
 
 			// ADD Diagonal Nodes
 			//map1[(int)parentID.x - 1][(int)parentID.y + 1];
-			if (ShouldAdd(map1, (int)parentID.x - 1, (int)parentID.y + 1, 0, width, height) == 1)
+			if (ShouldAdd(map1, (int)parentID.x - 1, (int)parentID.y + 1, 1, width, height) == 1)
 			{
 				int parentXplus = (int)parentID.x - 1;
 				int parentYplus = (int)parentID.y + 1;
@@ -303,7 +303,7 @@ void Algorithm::Breadth(Node** map1, int width, int height, Play::Vector2f start
 				openedBFS.push(&(map1[parentXplus][parentYplus]));
 			}
 			//map1[(int)parentID.x + 1][(int)parentID.y + 1];
-			if (ShouldAdd(map1, (int)parentID.x + 1, (int)parentID.y + 1, 0, width, height) == 1)
+			if (ShouldAdd(map1, (int)parentID.x + 1, (int)parentID.y + 1, 2, width, height) == 1)
 			{
 				int parentXplus = (int)parentID.x + 1;
 				int parentYplus = (int)parentID.y + 1;
@@ -315,7 +315,7 @@ void Algorithm::Breadth(Node** map1, int width, int height, Play::Vector2f start
 				openedBFS.push(&(map1[parentXplus][parentYplus]));
 			}
 			//map1[(int)parentID.x - 1][(int)parentID.y - 1];
-			if (ShouldAdd(map1, (int)parentID.x - 1, (int)parentID.y - 1, 0, width, height) == 1)
+			if (ShouldAdd(map1, (int)parentID.x - 1, (int)parentID.y - 1, 3, width, height) == 1)
 			{
 				int parentXplus = (int)parentID.x - 1;
 				int parentYplus = (int)parentID.y - 1;
@@ -327,7 +327,7 @@ void Algorithm::Breadth(Node** map1, int width, int height, Play::Vector2f start
 				openedBFS.push(&(map1[parentXplus][parentYplus]));
 			}
 			//map1[(int)parentID.x + 1][(int)parentID.y - 1];
-			if (ShouldAdd(map1, (int)parentID.x + 1, (int)parentID.y - 1, 0, width, height) == 1)
+			if (ShouldAdd(map1, (int)parentID.x + 1, (int)parentID.y - 1, 4, width, height) == 1)
 			{
 				int parentXplus = (int)parentID.x + 1;
 				int parentYplus = (int)parentID.y - 1;
@@ -394,7 +394,7 @@ void Algorithm::Depth(Node** map1, int width, int height, Play::Vector2f start, 
 
 			// ADD Diagonal Nodes
 			//map1[(int)parentID.x - 1][(int)parentID.y + 1];
-			if (ShouldAdd(map1, (int)parentID.x - 1, (int)parentID.y + 1, 0, width, height) == 1)
+			if (ShouldAdd(map1, (int)parentID.x - 1, (int)parentID.y + 1, 1, width, height) == 1)
 			{
 				int parentXplus = (int)parentID.x - 1;
 				int parentYplus = (int)parentID.y + 1;
@@ -406,7 +406,7 @@ void Algorithm::Depth(Node** map1, int width, int height, Play::Vector2f start, 
 				openedDFS.push(&(map1[parentXplus][parentYplus]));
 			}
 			//map1[(int)parentID.x + 1][(int)parentID.y + 1];
-			if (ShouldAdd(map1, (int)parentID.x + 1, (int)parentID.y + 1, 0, width, height) == 1)
+			if (ShouldAdd(map1, (int)parentID.x + 1, (int)parentID.y + 1, 2, width, height) == 1)
 			{
 				int parentXplus = (int)parentID.x + 1;
 				int parentYplus = (int)parentID.y + 1;
@@ -418,7 +418,7 @@ void Algorithm::Depth(Node** map1, int width, int height, Play::Vector2f start, 
 				openedDFS.push(&(map1[parentXplus][parentYplus]));
 			}
 			//map1[(int)parentID.x - 1][(int)parentID.y - 1];
-			if (ShouldAdd(map1, (int)parentID.x - 1, (int)parentID.y - 1, 0, width, height) == 1)
+			if (ShouldAdd(map1, (int)parentID.x - 1, (int)parentID.y - 1, 3, width, height) == 1)
 			{
 				int parentXplus = (int)parentID.x - 1;
 				int parentYplus = (int)parentID.y - 1;
@@ -430,7 +430,7 @@ void Algorithm::Depth(Node** map1, int width, int height, Play::Vector2f start, 
 				openedDFS.push(&(map1[parentXplus][parentYplus]));
 			}
 			//map1[(int)parentID.x + 1][(int)parentID.y - 1];
-			if (ShouldAdd(map1, (int)parentID.x + 1, (int)parentID.y - 1, 0, width, height) == 1)
+			if (ShouldAdd(map1, (int)parentID.x + 1, (int)parentID.y - 1, 4, width, height) == 1)
 			{
 				int parentXplus = (int)parentID.x + 1;
 				int parentYplus = (int)parentID.y - 1;

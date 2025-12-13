@@ -29,9 +29,9 @@ Play::Vector2f goal;
 // Check comment above the variable to know what alternatives are available
 
 // Map1 = 1 : Map2 = 2 : Map3 = 3
-int currentMap = 1;
+int currentMap = 3;
 // A* = 1 : BFS = 2 : DFS = 3 : Dijkstra = 4
-int currentAlgorithm = 3;
+int currentAlgorithm = 4;
 
 
 
@@ -319,7 +319,7 @@ void SetupMaps(int currentMap)
 // Draws the given map
 void DrawMap(Node** nodes, int height, int width)
 {
-	// Draw array for map 1
+	// Draw array for map
 	for (int i = 0; i < width; i++)
 	{
 		for (int j = 0; j < height; j++)
@@ -345,6 +345,13 @@ void DrawMap(Node** nodes, int height, int width)
 				Play::DrawRect(nodes[i][j].GetPosition() + Play::Vector2f{ 1,1 }, nodes[i][j].GetPosition() + Play::Vector2f{ 18,18 }, Play::cGrey, true);
 			}
 		}
+	}
+
+	// Performance test looking at the final cost of the path from start to goal
+	if (nodes[(int)goal.x / 20][(int)goal.y / 20].GetValueSofar() != NULL)
+	{
+		string goalStr = std::to_string(nodes[(int)goal.x / 20][(int)goal.y / 20].GetValueSofar());
+		Play::DrawDebugText({ 300, 570 }, goalStr.c_str(), Play::cBlack);
 	}
 }
 
@@ -461,6 +468,7 @@ bool MainGameUpdate( float elapsedTime )
 	Play::DrawRect(goal + Play::Vector2f{ 1,1 }, goal + Play::Vector2f{ 18,18 }, Play::cRed, true);
 	string timeStr = std::to_string(runtime);
 	Play::DrawDebugText({ 300, 550 }, timeStr.c_str(), Play::cBlack);
+
 
 	Play::PresentDrawingBuffer();
 	return Play::KeyDown( KEY_ESCAPE );
